@@ -1,0 +1,15 @@
+<div class="login-container">
+  <div class="text-content">
+    <p>Access to this site is restricted and requires you to login</p>
+  </div>
+  <inline-dialog>
+    <div dialogbody>
+      <email-input label="Email" [(ngModel)]="email" [validator]="validators.item('email')" (change)="onChange()"></email-input>
+      <password-input label="Password" [(ngModel)]="password" [validator]="validators.item('password')" (change)="onChange()" ></password-input>
+      <div class="error-message">{{errorMessage}}</div>
+    </div>
+    <div dialogcommands right>
+      <button [ngClass]="{'disabled': !canLogin()}" (click)="onLogin()">Login</button>
+    </div>
+  </inline-dialog>
+</div>

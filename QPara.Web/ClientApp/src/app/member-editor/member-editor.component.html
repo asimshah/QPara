@@ -1,0 +1,181 @@
+<popup-dialog [caption]="getCurrentMemberHeading()">
+  <div dialogbody class="member-editing-page" *ngIf="member">
+    <div class="page-container">
+      <div class="tabbed-container">
+        <div class="tab-array">
+          <div class="tab" *ngFor="let tab of tabs; let i = index" [ngClass]="{'selected': tab === selectedTab}">
+            <div *ngIf="i === 0 || isNewMember() === false" class="header" [innerHtml]="tab.caption" (click)="onTabClick(tab)"></div>
+          </div>
+        </div>
+        <div class="tab-form">
+          <div *ngIf="selectedTab.id === tabIds.nameAddress">
+            <div class="name-address-tab">
+              <text-input label="First Name" name="firstName" [(ngModel)]="member.firstName" [validator]="validators.item('firstName')"></text-input>
+              <text-input label="Last Name" name="lastName" [(ngModel)]="member.lastName" [validator]="validators.item('lastName')"></text-input>
+              <div></div>
+              <email-input label="Email" name="email" [(ngModel)]="member.email" [validator]="validators.item('email')"></email-input>
+              <email-input label="Second Email" name="secondEmail" [(ngModel)]="member.secondEmail" [validator]="validators.item('secondEmail')"></email-input>
+              <div></div>
+              <div>
+                <text-input label="Mobile" name="mobile" [(ngModel)]="member.mobileNumber" [validator]="validators.item('mobile')"></text-input>
+                <div class="annotation">11 digits in the format 07nnn nnn nnn</div>
+              </div>
+              <div>
+                <text-input label="Phone" name="phone" [(ngModel)]="member.phoneNumber" [validator]="validators.item('phone')"></text-input>
+                <div class="annotation">11 digits in the format 020 nnnn nnnn</div>
+              </div>
+              <div></div>
+            </div>
+            <div>
+              <text-input label="Flat" name="flat" [(ngModel)]="member.flat"></text-input>
+              <div class="annotation">If a block of flats, enter the flat details above</div>
+            </div>
+            <multiline-input label="Address" name="address" [(ngModel)]="member.address" rows="3" [validator]="validators.item('address')"></multiline-input>
+            <text-input label="Post Code" name="postCode" [(ngModel)]="member.postCode" [validator]="validators.item('postCode')"></text-input>
+            <dropdown-input *ngIf="user.type === UserType.Administrator" label="Zone" name="zones" [(ngModel)]="member.zoneItem" [items]="zoneList"></dropdown-input>
+          </div>
+          <div *ngIf="selectedTab.id === tabIds.subscription">
+            <div class="subscription-tab">
+              <enum-input label="Subscription Period" name="period" [(ngModel)]="member.subscriptionPeriod" [enumType]="SubscriptionPeriod"></enum-input>
+              <enum-input label="Subscription Type" name="type" [(ngModel)]="member.subscriptionType" [enumType]="SubscriptionType"></enum-input>
+              <div>
+                <number-input class="member-count" label="Member Count" name="memberCount" [(ngModel)]="member.memberCount" [minNumber]="1" [maxNumber]="2"></number-input>
+                <div class="annotation">Settings are 1 or 2 (for single or double membership)</div>
+              </div>
+              <div>
+                <date-input label="Joined On" name="joinedOn" [(ngModel)]="member.joinedOn" monthCount="1" [validator]="validators.item('joinedOn')"></date-input>
+                <div class="annotation">Accurate joined on dates help with &ldquo;Joiners and Leavers&rdquo; stats</div>
+              </div>
+              <div>
+                <div class="spacer"></div>
+                <enum-input label="Payment Method" name="paymentMethod" [(ngModel)]="member.paymentMethod" [enumType]="PaymentMethod"></enum-input>
+                <div class="annotation">Use Regular for automatic payments such as Standing Orders, OneOff for the rest</div>
+              </div>                            <div>
+                <enum-input class="minutes-delivery-method" label="Minutes Delivery Method" name="delivery" [(ngModel)]="member.minutesDeliveryMethod" [enumType]="MinutesDeliveryMethod"></enum-input>
+                <text-input label="Delivery Note" name="deliveryNote" [(ngModel)]="member.deliveryNote"></text-input>
+                <div class="annotation">Optionally, add any extra information regarding delivery of minutes. This text appears on the Street Rep's sheet</div>
+              </div>
+              <div class="suspended">
+                <!--<bool-input label="Associate" name="associate" [(ngModel)]="member.isAssociate"></bool-input>-->
+                <bool-input label="Suspended" name="suspended" [(ngModel)]="member.isSuspended"></bool-input>
+                <div class="annotation">Suspended members are never shown as payment outstanding and do not appear in standard sheets</div>
+              </div>
+              <div></div><div></div>
+              <div></div><div></div><div></div>
+              <div>
+                <date-input label="Left On" name="leftOn" [maxDate]="getToday()" [minDate]="member.joinedOn" [(ngModel)]="member.leftOn" [validator]="validators.item('leftOn')"></date-input>
+                <div class="annotation">Setting a date here will mark this member as having left</div>
+              </div>
+              <enum-input class="leaving-reason" [columns]="2" label="Leaving Reason" name="leavingreason" [(ngModel)]="member.leavingReason" [enumType]="LeavingReasons" [ngClass]="{disabled: !enableLeavingReasons()}"></enum-input>
+            </div>
+          </div>
+          <div *ngIf="selectedTab.id === tabIds.payments">
+            <div class="headline">QPara Year {{currentSubscriptionYear}}</div>
+            <div [ngClass]="{'due-notice': member.paymentIsOutstanding}">{{getPaymentStatement()}}</div>
+            <div *ngIf="member.payments && member.payments.length > 0; else noPaymentsOnRecord">
+              <div class="sub-heading">Payment Records:</div>
+              <div class="member-payments">
+                <div class="scrolling-table">
+                  <div class="table-header">
+                    <div class="table-row">
+                      <div class="table-column">QPara Year</div>
+                      <div class="table-column">Recd On</div>
+                      <div class="table-column align-right">Recd</div>
+                      <div class="table-column align-centre">Type</div>
+                      <div class="table-column align-centre">Waived</div>
+                      <div class="table-column align-centre">Note Count</div>
+                    </div>
+                  </div>
+                  <div class="table-body">
+                    <ng-container *ngFor="let payment of member.payments; let i = index">
+                      <div *ngIf="i < 6" class="table-row" [ngClass]="{selected: payment.selected, 'is-admin':  user.type === UserType.Administrator}" (click)="user.type === UserType.Administrator && onEditPayment(payment, i)">
+                        <div class="table-column">{{payment.subscriptionYear}}</div>
+                        <div class="table-column">{{formatDate(payment.receivedDate)}}</div>
+                        <div class="table-column align-right">£{{payment.amountReceived}}</div>
+                        <div class="table-column align-centre">{{getPaymentType(payment.type)}}</div>
+                        <div class="table-column align-centre"><span *ngIf="payment.isPaid" class='glyphicon glyphicon-check'></span>&nbsp;</div>
+                        <div class="table-column align-centre"><span>{{payment.notes ? payment.notes.length : 0}}</span></div>
+                      </div>
+                    </ng-container>
+                  </div>
+                  <div class="annotation">To edit the details of an existing payment, click on the row</div>
+                </div>
+              </div>
+              <ng-template #noPaymentsOnRecord>There are no payments on record.</ng-template>
+            </div>
+
+          </div>
+          <div *ngIf="selectedTab.id === tabIds.memberNotes">
+            <div class="member-notes">
+              <div *ngIf="member.notes && member.notes.length > 0; else noNotes">
+                <div class="sub-heading">Existing notes:</div>
+                <div class="notes scrolling-table">
+                  <div class="table-header">
+                    <div class="table-row">
+                      <div class="table-column">Date</div>
+                      <div class="table-column">Written By</div>
+                      <div class="table-column">Note</div>
+                    </div>
+                  </div>
+                  <div class="table-body">
+                    <div class="table-row" *ngFor="let note of member.notes">
+                      <div class="table-column">{{note.formattedCreatedOn}}</div>
+                      <div class="table-column">{{note.userName}}</div>
+                      <div class="table-column note-content">
+                        <div class="note-line" *ngFor="let nl of note.noteLines">{{nl.line}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #noNotes>
+                <div class="no-notes">There are no existing notes</div>
+              </ng-template>
+            </div>
+          </div>
+          <div *ngIf="selectedTab.id === tabIds.history">
+            <div class="change-history">
+              <div *ngIf="member.changes && member.changes.length > 0; else noHistory">
+                <div class="history scrolling-table">
+                  <div class="table-header">
+                    <div class="table-row">
+                      <div class="table-column change-date">Date</div>
+                      <div class="table-column change-madeBy">Made By</div>
+                      <div class="table-column change-description">Description</div>
+                    </div>
+                  </div>
+                  <div class="table-body">
+                    <div class="table-row" *ngFor="let change of member.changes">
+                      <div class="table-column change-date">{{change.dateTime}}</div>
+                      <div class="table-column change-madeBy">{{change.madeBy}}&nbsp;</div>
+                      <div class="table-column change-description">{{change.description}}</div>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #noHistory>
+                  <div class="no-history">There are no history records</div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="memberHasChanged()" class="annotation warning">There are changes pending</div>
+  </div>
+  <div dialogcommands left>
+    <button *ngIf="canShowButton(commands.deleteMember)" class="delete-member-button danger" (click)="onDeleteMember()">Delete Member</button>
+  </div>
+  <div dialogcommands right>
+    <button *ngIf="canShowButton(commands.addMemberNote)" (click)="onAddNewMemberNote()">Add New Member Note</button>
+    <button *ngIf="canShowButton(commands.addPayment)" (click)="onCreateNewPayment()">Add Payment</button>
+    <button *ngIf="canShowButton(commands.saveChanges)" class="save-changes-button" (click)="onUpdateMember()">Save Changes</button>
+    <button *ngIf="canShowButton(commands.createNewMember)" class="create-new-member-button" (click)="onCreateNewMember()">Save New Member</button>
+    <button class="cancel" *ngIf="canShowButton(commands.cancelNewMember)" (click)="onCancel()">Cancel</button>
+    <button *ngIf="canShowButton(commands.cancelChanges)" class="cancel" (click)="onCancelChanges()">Cancel Changes</button>
+    <button *ngIf="canShowButton(commands.close)" class="cancel" (click)="onClose()">Close</button>
+  </div>
+</popup-dialog>
+<qp-note-editor></qp-note-editor>
+<qp-payment-editor></qp-payment-editor>
+<popup-message></popup-message>

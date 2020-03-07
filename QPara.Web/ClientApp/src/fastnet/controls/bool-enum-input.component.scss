@@ -1,0 +1,4 @@
+@import "_theme.components";
+:host {
+    @extend %theme-enum-input;
+}

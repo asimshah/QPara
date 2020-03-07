@@ -1,0 +1,46 @@
+// themes are named:
+// default, musical, etc
+@import "_material-design-color-palettes.scss";
+
+// theme colours
+// 'background'     use this for application backgrounds (typically the app pages)
+// 'surface'        use this for things on the background: default text colour, control borders, rules, etc
+// 'primary'        use for main widgets: buttons, control icons
+// 'accent'      use for addtional widgets to distinguish them from primary
+// 'error'          use for error messages, error caption backgrounds, error borders
+// 'warning'        use for warnings, to draw attention
+// 'disabled'       use for showing widgets that are disabled
+//
+
+// default theme is largely blue
+$default-colours: (
+    'background' : ( 'base': white, 'light': white, 'dark': #e9e9e9 ),
+    'surface' : ( 'base': $mdc-grey-900, 'light': $mdc-grey-600, 'dark': black ),
+    'error' : ( 'base': $mdc-red-600, 'light': $mdc-red-500, 'dark': $mdc-red-900 ),
+    'warning' : ( 'base': $mdc-orange-600, 'light': $mdc-orange-500, 'dark': $mdc-orange-900 ),
+    'disabled': ('base': $mdc-grey-500, 'light': $mdc-grey-300, 'dark': $mdc-grey-800),
+    'primary' : ('base': $mdc-blue-500, 'light': $mdc-blue-300, 'dark': $mdc-blue-800),
+    'accent': ('base': $mdc-cyan-A400, 'light': $mdc-cyan-A100, 'dark': $mdc-cyan-A700),
+    'shadow': ('base': $mdc-grey-500, 'light': $mdc-grey-400, 'dark': $mdc-grey-600)
+);
+
+$default-dialog-colours: map-merge($default-colours, (
+    'chromeborder': ('base': $mdc-teal-A400, 'light': $mdc-teal-A100, 'dark': $mdc-teal-A700),
+    'captionbackground': ('base': $mdc-teal-A400, 'light': $mdc-teal-A100, 'dark': $mdc-teal-A700) ));
+
+$default-button-colours: (
+    'primary' : ( 'foreground' : white, 'background': $mdc-blue-500, 'border': $mdc-blue-800, 'hover-foreground' : $mdc-blue-500, 'hover-background': white, 'hover-border': $mdc-blue-800),
+    'secondary': ( 'foreground' : white, 'background': $mdc-cyan-A400, 'border': $mdc-cyan-A700, 'hover-foreground' : $mdc-cyan-A400, 'hover-background': white, 'hover-border': $mdc-cyan-A700),
+    'danger' : ( 'foreground' : white, 'background': $mdc-red-600, 'border': $mdc-red-900, 'hover-foreground' : $mdc-red-600, 'hover-background': white, 'hover-border': $mdc-red-900),
+    'cancel': ( 'foreground' : $mdc-blue-500, 'background': white, 'border': $mdc-blue-800, 'hover-foreground' : white, 'hover-background': $mdc-blue-500, 'hover-border': $mdc-blue-800),
+    'link' : ( 'foreground' : $mdc-blue-500, 'background': transparent, 'border': transparent, 'hover-foreground' : $mdc-blue-500, 'hover-background': transparent, 'hover-border': transparent),
+    'disabled': ( 'foreground' : white, 'background': $mdc-grey-500, 'border': $mdc-grey-500, 'hover-foreground' : white, 'hover-background': $mdc-grey-500, 'hover-border': $mdc-grey-500)
+);
+
+
+$testing-colours : map-merge($default-colours, (
+    'surface' : ('base': $mdc-green-600, 'light': $mdc-green-400, 'dark': $mdc-green-900)
+    ));
+
+
+

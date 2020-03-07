@@ -1,0 +1,247 @@
+@import "../styles/variables";
+@import "../../fastnet/themes/_themes.scss";
+@include theme-buttons();
+@import "../shared/_themes.scss";
+//@import "../shared/_fixed-header-table.scss";
+
+$blue: cornflowerblue;
+$red: red;
+
+:host {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header-block {
+  .selection-panel {
+    display: flex;
+
+    button {
+      margin-left: 0.25em;
+    }
+  }
+
+  h2 {
+    margin-right: 0.25em;
+  }
+
+  search-input {
+    max-width: 380px;
+    border-radius: 0.25em;
+    /*border: 2px solid $blue;*/
+    padding-bottom: 0.15em;
+    margin-bottom: 1px;
+    margin-left: 0.25em;
+    --search-colour: $blue;
+    --search-hover-colour: orange;
+    --clear-colour: $red;
+    --clear-hover-colour: orange;
+  }
+
+  search-input {
+  }
+
+  .advanced-filter-toggle {
+    margin-left: 0.5em;
+    background-color: dodgerblue;
+    border-radius: 3px;
+    border: none;
+    color: white;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+
+    &:hover {
+      background-color: white;
+      color: dodgerblue;
+    }
+  }
+}
+
+input[type="search"] {
+  -webkit-appearance: searchfield;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: searchfield-cancel-button;
+}
+
+.method-filter {
+  display: inline-block;
+}
+
+section.positioned {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 800px;
+  box-shadow: 0 0 15px #333;
+}
+
+.dual-panel {
+  margin-top: 8px;
+  display: flex;
+
+  .list-panel {
+    flex: 1;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+  }
+}
+
+//$table-heading-colour: theme-colour('primary', 'dark');
+
+.paging {
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+
+  > div:first-child {
+    display: flex;
+  }
+
+  .paging-stats {
+    align-self: flex-end;
+    font-size: 14px;
+  }
+
+  .filter-descr {
+    align-self: flex-end;
+    margin-left: 0.5em;
+    font-weight: 500;
+    font-style: italic;
+  }
+
+  .buttons {
+    text-align: right;
+
+    button {
+      float: right;
+      width: 120px;
+      margin: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      //background-color: $table-heading-colour;
+      /*&:hover {
+                background-color: white;
+                color: $table-heading-colour;
+            }*/
+    }
+  }
+}
+
+.member-list-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 0.25em;
+}
+
+.member-list {
+  /*$table-width: 1200px;
+    $table-height: 700px;*/
+
+  $inside-border-colour: darkgrey;
+  $outside-border-colour: black;
+
+  table {
+    width: 100%;
+    font-size: 12px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 1px solid $table-header-colour;
+  }
+
+  td, th {
+    padding: 0.25em;
+
+    &.zoneNumber, &.memberCount {
+      text-align: right;
+    }
+
+    &.paymentMethod, &.monthDue, &.isPaid {
+      text-align: center;
+    }
+
+    &.amountDue, &.amountReceived {
+      text-align: right;
+    }
+  }
+
+  thead {
+    tr {
+      background-color: $table-header-colour;
+      color: white;
+    }
+
+    th:not(:first-child) {
+      border-left: 1px solid $inside-border-colour;
+    }
+
+    tr {
+      border-bottom: 1px solid $outside-border-colour;
+    }
+
+    th.subscriptionType {
+      width: 100px;
+    }
+  }
+
+  tbody {
+    //height: $table-height;
+    $oddrow-background: white;
+    $evenrow-background: #eeeeee;
+    //$hover-background: #ecc7db;
+    $selected-background: #999999;
+
+    tr {
+      background-color: $oddrow-background;
+
+      &:nth-child(even) {
+        background-color: $evenrow-background;
+      }
+
+      &:hover {
+        background-color: $table-row-hover-colour;
+      }
+
+      &.payment-outstanding {
+        td {
+          color: red;
+        }
+      }
+
+      &.suspended {
+
+        td:not(.isSuspended) {
+          text-decoration: line-through;
+          text-decoration-color: red;
+        }
+      }
+    }
+
+    td {
+
+      &.email {
+
+        a {
+          color: theme-colour('primary', 'dark');
+          text-decoration-line: underline;
+        }
+      }
+    }
+  }
+}
+
+.sub-heading {
+  display: flex;
+
+  .download-link {
+    margin-left: 24px;
+    margin-top: 7px;
+  }
+}
+
+
+#searchTextInput {
+  width: 200px;
+}

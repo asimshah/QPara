@@ -1,0 +1,340 @@
+/*$border-colour: #808080;
+$error-colour: red;
+$focus-colour: cornflowerblue;
+$disabled-colour: #dadada;
+$hover-colour: orange;
+$link-colour: #0340d8;
+
+$button-background: #337ab7;
+$button-colour: white;
+$button-hover: orange;
+$button-border: 1px solid transparent;
+
+$cancel-button-background: white;
+$cancel-button-colour: black;
+
+$warning-button-background: red;
+$warning-button-colour: white;
+
+$secondary-button-background: green;
+$secondary-button-colour: white;*/
+
+
+/**, *:before, *:after {
+    box-sizing: border-box;
+}
+@import "_theme.components";*/
+
+
+/*%set-disabled {
+    pointer-events: none;
+
+
+    label {
+        color: $disabled-colour;
+
+        &.selected {
+            span:first-child {
+                border: 0.0625em solid $disabled-colour !important;
+            }
+
+            span:nth-child(2) {
+                border: 0.0625em solid $disabled-colour !important;
+                background-color: $disabled-colour !important;
+            }
+
+            span:last-child {
+                color: $disabled-colour !important;
+            }
+        }
+    }
+}*/
+/*%input-box {
+    font-weight: normal;
+    border-radius: 0.25em;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+    padding-bottom: 0.25em;
+    padding-top: 0.25em;
+    border: 1px solid $border-colour;
+
+    &:focus {
+        outline: none;
+        border: 1px solid $focus-colour;
+    }
+
+
+}*/
+/*%std-text-input {
+
+    label {
+        span {
+            @extend %label-above;
+        }
+    }
+
+    input {
+        @extend %input-box;
+        width: 100%;
+    }
+
+    &.not-valid {
+        input {
+            border: 1px solid $error-colour;
+        }
+    }
+
+    &.disabled {
+        @extend %set-disabled;
+
+        input {
+            border: 1px solid $disabled-colour;
+        }
+    }
+}*/
+/*%std-enum-input {
+    $outer-circle-size: 13px;
+    $outer-circle-radius: 7px;
+    $outer-cicle-border-width: 0.875px;
+    $inner-circle-size: 7px;
+    $inner-circle-radius: 3.5px;
+    $inner-cicle-border-width: 0.875px; //0.0625em
+    display: grid;
+    grid-template-columns: auto;
+    align-items: flex-start;
+
+    .enum-border {
+        grid-column: 1;
+        grid-row: 1;
+        border: 1px solid $border-colour;
+        border-radius: 0.25em;
+
+        &.disabled {
+            border: 1px solid $disabled-colour;
+            pointer-events: none;
+            color: $disabled-colour;
+        }
+    }
+
+    .enum-label {
+        grid-column: 1;
+        grid-row: 1;
+        align-self: flex-start;
+        justify-self: left;
+        background-color: white;
+        position: relative;
+        top: -10px;
+        left: 7px;
+        padding-left: 4px;
+        padding-right: 4px;
+        font-weight: 500;
+
+        &.disabled {
+            color: $disabled-colour;
+        }
+    }
+
+    .enum-group {
+        display: grid;
+        grid-template-columns: auto;
+        margin-top: 7px;
+        margin-bottom: 5px;
+        margin-right: 5px;
+
+        .enum-item {
+            display: grid;
+            grid-template-columns: 24px auto;
+            align-items: center;
+            justify-items: center;
+
+            span.outer-circle {
+                grid-column: 1;
+                grid-row: 1;
+                width: $outer-circle-size; //0.875em;
+                height: $outer-circle-size; //0.875em;
+                border: $outer-cicle-border-width solid rgb(192,192,192);
+                border-radius: $outer-circle-radius; // 0.5em;
+            }
+
+            span.inner-circle {
+                grid-column: 1;
+                grid-row: 1;
+                width: $inner-circle-size; //0.875em;
+                height: $inner-circle-size; //0.875em;
+                border: $inner-cicle-border-width solid darken($focus-colour, 10%);
+                border-radius: $inner-circle-radius; //0.25em;
+                background: $focus-colour;
+                display: none;
+            }
+
+            span.item-label {
+                grid-column: 2;
+                grid-row: 1;
+                justify-self: left;
+            }
+
+            &.selected {
+                span.inner-circle {
+                    display: inline;
+                }
+            }
+        }
+    }
+}*/
+
+/*label {
+    margin-bottom: 0;
+    width: 100%;
+
+    span {
+        font-weight: 600;
+    }
+}*/
+/*%std-dialog-buttons {
+    button {
+        font-size: 13px;
+        border: $button-border;
+        border-radius: 0.25em;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        padding-bottom: 0.25em;
+        height: 24px;
+
+        background-color: $button-background;
+        color: $button-colour;
+        margin: 0.125em;
+
+        &:hover {
+            background-color: $button-hover;
+            color: $button-colour;
+            border: 1px solid $button-hover;
+        }
+
+        &[disabled], &.disabled {
+            cursor: none;
+            pointer-events: none;
+            background-color: $disabled-colour;
+            border-color: $disabled-colour;
+            color: $button-colour;
+        }
+    }
+}
+%std-dialog-commands {
+    $gutter: 0.25em;
+    background-color: #e4e4e4;
+    border-radius: 0.25em;
+    padding: $gutter;
+    margin-top: $gutter * 3;
+
+    div {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        justify-items: center;
+
+        button {
+            font-size: 13px;
+            border: $button-border;
+            border-radius: 0.25em;
+            padding-left: 0.5em;
+            padding-right: 0.5em;
+            padding-bottom: 0.25em;
+            height: 28px;
+            min-width: 60px;
+            background-color: $button-background;
+            color: $button-colour;
+
+            &.cancel {
+                background-color: $cancel-button-background;
+                color: $cancel-button-colour;
+                border: 1px solid $cancel-button-colour;
+            }
+
+            &.warning {
+                background-color: $warning-button-background;
+                color: $warning-button-colour;
+            }
+
+            &.secondary {
+                background-color: $secondary-button-background;
+                color: $secondary-button-colour;
+            }
+
+            &:hover {
+                background-color: $button-hover;
+                color: $button-colour;
+                border: $button-hover;
+            }
+
+            &.link {
+                background: none;
+                border: none;
+                color: $link-colour;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+
+                &[disabled], &.disabled {
+                    color: gray;
+                }
+            }
+
+            &[disabled], &.disabled {
+                cursor: none;
+                pointer-events: none;
+                background-color: $disabled-colour;
+                border-color: $disabled-colour;
+                color: $button-colour;
+            }
+        }
+
+        > * {
+            &.centre {
+                grid-row: 1;
+                grid-column: 2;
+                display: flex;
+
+                > * {
+                    margin-left: $gutter;
+                    margin-right: $gutter;
+                }
+            }
+
+            &.left {
+                grid-row: 1;
+                grid-column: 1;
+                display: flex;
+                justify-self: left;
+
+                * {
+                    margin-left: 0;
+                    margin-right: $gutter;
+                }
+            }
+
+            &.right {
+                grid-row: 1;
+                grid-column: 3;
+                display: flex;
+                justify-self: right;
+                justify-content: flex-end;
+
+                * {
+                    margin-left: $gutter;
+                    margin-right: 0;
+                }
+            }
+        }
+
+    }
+}*/
+
+/*.text-error {
+    font-style: italic;
+    color: $error-colour;
+}
+
+.validation-text {
+    font-size: 12px;
+}*/
+

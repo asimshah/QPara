@@ -1,0 +1,111 @@
+﻿@import "_variables.scss";
+
+.webframe-form {
+    $input-border-colour: #ccc;
+    $footer-colour: #808080;
+    $link-colour: #30b0e9;
+    $default-button-background-colour: $alt-background-colour;
+    $default-button-foreground-colour: $alt-foreground-colour;
+    $button-background-colour: white;
+    $button-foreground-colour: black;
+    $button-hover-colour: lightgray;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+
+    .error-message {
+        color: $error-colour;
+        font-size: smaller;
+        font-style: italic;
+    }
+
+    .header {
+        font-size: 22px;
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+
+    .sub-header {
+        font-size: 18px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .sub-footer {
+        font-size: 12px;
+        font-style: italic;
+        color: $footer-colour;
+    }
+
+    .form-body {
+        margin-bottom: 12px;
+    }
+
+    label {
+        font-size: 14px;
+    }
+
+    input {
+        border-radius: 3px;
+        border: 1px solid $input-border-colour;
+        padding-top: 3px;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-bottom: 6px;
+    }
+
+    .form-buttons {
+        margin-top: 24px;
+        display: flex;
+
+        .link-button {
+            background: none;
+            border: none;
+            color: $link-colour;
+            font-size: 8pt;
+
+            &:hover {
+                text-decoration: underline;
+            }
+
+            &[disabled] {
+                cursor: none;
+                pointer-events: none;
+                color: gray;
+            }
+        }
+
+        .filler {
+            flex: 1;
+        }
+
+        .button {
+            width: 120px;
+            margin-left: 5px;
+            border: 1px solid $button-foreground-colour;
+            border-radius: 3px;
+            padding: 6px 12px;
+            background-color: $button-background-colour;
+            color: $button-foreground-colour;
+
+            &:hover {
+                background-color: $button-hover-colour;
+            }
+
+            &.default {
+                border: 1px solid $default-button-foreground-colour;
+                background-color: $default-button-background-colour;
+                color: $default-button-foreground-colour;
+
+                &:hover {
+                    background-color: $button-hover-colour;
+                }
+            }
+
+            &[disabled] {
+                cursor: none;
+                pointer-events: none;
+                background-color: gray;
+            }
+        }
+    }
+}

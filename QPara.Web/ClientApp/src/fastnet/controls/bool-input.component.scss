@@ -1,0 +1,21 @@
+@import "_theme.components.scss";
+.bool-input {
+    label {
+        /*display: grid;
+        grid-template-columns: 16px fit-content(24px) auto;
+        align-items: flex-start;*/
+        font-weight: normal;
+        span {
+            white-space: nowrap;
+        }
+
+    }
+    input {
+        margin-top: 5px;
+    }
+
+
+    &.disabled {
+        @extend %theme-disabled;
+    }
+}

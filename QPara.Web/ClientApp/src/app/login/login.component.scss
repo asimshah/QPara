@@ -1,0 +1,19 @@
+@import "../../fastnet/themes/_themes";
+@include theme-buttons();
+@include theme-dialog-commands();
+
+:host {
+  display: block;
+
+}
+.login-container {
+  margin-left: 48px;
+  margin-right: 48px;
+}
+.error-message {
+  font-style: italic;
+  color: theme-colour('error');
+}
+
+
+

@@ -1,0 +1,41 @@
+<div class="date-input" [ngClass]="{'disabled' : disabled}">
+    <span class="label" [innerHTML]="label"></span>
+    <span *ngIf="traceReferences" class="trace-text">{{getReference()}}</span>
+    <div  class="date-box-border" [ngClass]="{'hidden': !showInputBox,'not-valid': isInError(), 'disabled' : disabled}">
+        <div>
+            <input readonly  [min]="standardDate(minDate)" [max]="standardDate(maxDate)" [ngModel]="value | date:'ddMMMyyyy'" (mouseup)="onMouseUp($event)" (blur)="onBlur()" (focus)="onFocus()" />
+            <button class="icon clear-button" [ngClass]="{'not-visible': !value || value === null}" (click)="clear()">
+                <span class="fa fa-remove"></span>
+            </button>
+        </div>
+    </div>
+    <div class="validation-text">
+        <span *ngIf="isInError()" class="text-error">{{vr.message}}</span>
+    </div>
+    <div  #focushere class="calendar" [ngClass]="{'as-popup': showInputBox, 'hidden': !showCalendar}" >
+        <div class="calendar-list">
+            <div *ngFor="let cm of monthList; let i = index; let first = first; let last = last" class="calendar-month" (mouseup)="stopEvent($event)" >
+                <div class="header">
+                    <span *ngIf="first" class="fa fa-arrow-circle-left back-icon" (click)="onBackOneMonth()" (mouseup)="stopEvent($event)"></span>
+                    <span *ngIf="!first" class="fa fa-square blank-icon"></span>
+                    <div class="month-year">
+                        <span>{{cm.name}}</span>
+                        <combo-box [compact]="true" [aligncentre]="true" [maxRows]="5" [(ngModel)]="cm.year" [items]="yearRange" (selectionchanged)="onYearChange($event, cm, i)"></combo-box>
+                    </div>
+                    <span *ngIf="!last" class="fa fa-square blank-icon"></span>
+                    <span *ngIf="last" class="fa fa-arrow-circle-right forward-icon" (click)="onForwardOneMonth()" (mouseup)="stopEvent($event)"></span>
+                </div>
+                <div *ngIf="showDaySelection" class="calendar-days">
+                    <div class="day-header" *ngFor="let d of weekDays">{{d}}</div>
+
+                    <div *ngFor="let cd of cm.days" class="calendar-day">
+                        <div class="day-cell" *ngIf="cd.status.filler === true">&nbsp;</div>
+                        <div class="day-cell" *ngIf="cd.status.filler === false" [ngClass]="getDayClasses(cd)" (click)="onDayClick(cd)" (mouseup)="stopEvent($event)" >
+                            <div >{{cd.dayNumber}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+<popup-dialog [caption]="caption">
+  <div dialogbody>
+    <div class="column-list">
+      <ng-container *ngFor="let cd of columns; let i = index">
+        <bool-input *ngIf="cd.name !== ColumnNames.MonthDue" label="{{ColumnNames[cd.name]}}" name="{{ColumnNames[cd.name].toLowerCase()}}" [(ngModel)]="cd.show"></bool-input>
+      </ng-container>
+    </div>
+  </div>
+  <div dialogcommands>
+    <button (click)="onClose()">OK</button>
+  </div>
+</popup-dialog>

@@ -1,0 +1,173 @@
+<div class="counters-page">
+  <div *ngIf="statistics">
+    <div class="heading">Current Membership</div>
+    <div class="current-totals">
+      <div>
+        <div class="sub-heading">All Members</div>
+        <table class="current-totals-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Annual</th>
+              <th>Life</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Full Members</td>
+              <td>{{statistics.counts.fullMembers.annual.total}}</td>
+              <td>{{statistics.counts.fullMembers.life.total}}</td>
+              <td>{{(statistics.counts.fullMembers.annual.total + statistics.counts.fullMembers.life.total)}}</td>
+            </tr>
+            <tr>
+              <td>Associates</td>
+              <td>{{statistics.counts.associates.annual.total}}</td>
+              <td>{{statistics.counts.associates.life.total}}</td>
+              <td>{{(statistics.counts.associates.annual.total + statistics.counts.associates.life.total)}}</td>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td>{{(statistics.counts.fullMembers.annual.total + statistics.counts.associates.annual.total)}}</td>
+              <td>{{(statistics.counts.fullMembers.life.total + statistics.counts.associates.life.total)}}</td>
+              <td>{{(statistics.counts.fullMembers.annual.total + statistics.counts.fullMembers.life.total + statistics.counts.associates.annual.total + statistics.counts.associates.life.total)}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="sub-heading">Standard Rate Members</div>
+        <table class="current-totals-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Annual</th>
+              <th>Life</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Full Members</td>
+              <td>{{statistics.counts.fullMembers.annual.standard}}</td>
+              <td>{{statistics.counts.fullMembers.life.standard}}</td>
+              <td>{{(statistics.counts.fullMembers.annual.standard + statistics.counts.fullMembers.life.standard)}}</td>
+            </tr>
+            <tr>
+              <td>Associates</td>
+              <td>{{statistics.counts.associates.annual.standard}}</td>
+              <td>{{statistics.counts.associates.life.standard}}</td>
+              <td>{{(statistics.counts.associates.annual.standard + statistics.counts.associates.life.standard)}}</td>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td>{{(statistics.counts.fullMembers.annual.standard + statistics.counts.associates.annual.standard)}}</td>
+              <td>{{(statistics.counts.fullMembers.life.standard + statistics.counts.associates.life.standard)}}</td>
+              <td>{{(statistics.counts.fullMembers.annual.standard + statistics.counts.fullMembers.life.standard + statistics.counts.associates.annual.standard + statistics.counts.associates.life.standard)}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div>Concessionary Rate Members</div>
+        <table class="current-totals-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Annual</th>
+              <th>Life</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Full Members</td>
+              <td>{{statistics.counts.fullMembers.annual.concession}}</td>
+              <td>{{statistics.counts.fullMembers.life.concession}}</td>
+              <td>{{(statistics.counts.fullMembers.annual.concession + statistics.counts.fullMembers.life.concession)}}</td>
+            </tr>
+            <tr>
+              <td>Associates</td>
+              <td>{{statistics.counts.associates.annual.concession}}</td>
+              <td>{{statistics.counts.associates.life.concession}}</td>
+              <td>{{(statistics.counts.associates.annual.concession + statistics.counts.associates.life.concession)}}</td>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td>{{(statistics.counts.fullMembers.annual.concession + statistics.counts.associates.annual.concession)}}</td>
+              <td>{{(statistics.counts.fullMembers.life.concession + statistics.counts.associates.life.concession)}}</td>
+              <td>{{(statistics.counts.fullMembers.annual.concession + statistics.counts.fullMembers.life.concession + statistics.counts.associates.annual.concession + statistics.counts.associates.life.concession)}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div>Complimentary Rate Members</div>
+        <table class="current-totals-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Annual</th>
+              <th>Life</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Full Members</td>
+              <td>{{statistics.counts.fullMembers.annual.complimentary}}</td>
+              <td>{{statistics.counts.fullMembers.life.complimentary}}</td>
+              <td>{{(statistics.counts.fullMembers.annual.complimentary + statistics.counts.fullMembers.life.complimentary)}}</td>
+            </tr>
+            <tr>
+              <td>Associates</td>
+              <td>{{statistics.counts.associates.annual.complimentary}}</td>
+              <td>{{statistics.counts.associates.life.complimentary}}</td>
+              <td>{{(statistics.counts.associates.annual.complimentary + statistics.counts.associates.life.complimentary)}}</td>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td>{{(statistics.counts.fullMembers.annual.complimentary + statistics.counts.associates.annual.complimentary)}}</td>
+              <td>{{(statistics.counts.fullMembers.life.complimentary + statistics.counts.associates.life.complimentary)}}</td>
+              <td>{{(statistics.counts.fullMembers.annual.complimentary + statistics.counts.fullMembers.life.complimentary + statistics.counts.associates.annual.complimentary + statistics.counts.associates.life.complimentary)}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngFor="let msg of statistics.messages">{{msg}}</div>
+    <div class="leaver-joiners">
+      <div class="heading">Joiners and Leavers Analysis</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Total Members</th>
+            <th>Full</th>
+            <th>Associates</th>
+            <th>Joiners</th>
+            <th>Leavers</th>
+            <th class="bracketed">Moved</th>
+            <th class="bracketed">Death/Illness</th>
+            <th class="bracketed">Work Commitments</th>
+            <th class="bracketed">Other reasons</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lj of statistics.leaverJoiners">
+            <td>{{lj.yearName}}</td>
+            <td class="total-members">{{lj.totalMembers}}</td>
+            <td class="total-members">{{lj.totalMembers - lj.totalAssociateMembers}}</td>
+            <td class="total-members">{{lj.totalAssociateMembers}}</td>
+            <td class="joiners">{{lj.totalJoiners}}</td>
+            <td class="leavers">{{lj.totalLeavers}}</td>
+            <td class="bracketed">{{lj.totalLeavers > 0 ? lj.totalMoved : ''}}</td>
+            <td class="bracketed">{{lj.totalLeavers > 0 ? lj.totalDeathsIllness : ''}}</td>
+            <td class="bracketed">{{lj.totalLeavers > 0 ? lj.totalWorkCommitments : ''}}</td>
+            <td class="bracketed">{{lj.totalLeavers > 0 ?lj.totalOtherReasons : ''}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

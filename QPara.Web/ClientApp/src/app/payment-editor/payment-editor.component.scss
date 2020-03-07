@@ -1,0 +1,57 @@
+
+@import "../../fastnet/themes/_themes.scss";
+@import "../shared/_scrolling-table.scss";
+@import "../shared/_themes.scss";
+
+.payment-form {
+  margin: $theme-gutter;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-column-gap: $theme-gutter;
+}
+
+.payment-notes {
+  margin-bottom: $theme-gutter;
+}
+
+.payment-types {
+  margin-top: $theme-gutter * 2;
+}
+
+.notes.scrolling-table {
+  font-size: 13px;
+  @extend .std-scrolling-table-theme;
+  $column-template: 100px 160px auto;
+
+
+  .table-header {
+    grid-template-columns: $column-template; //repeat(3, auto);
+    grid-auto-rows: auto;
+  }
+
+  .table-row {
+    grid-template-columns: $column-template;
+  }
+
+  .table-body {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .note-content {
+    max-height: 100px;
+    overflow-y: auto;
+  }
+}
+
+.payment-notes {
+  .scrollable-table {
+    table {
+      font-size: 10px;
+
+      tbody {
+        height: 120px;
+      }
+    }
+  }
+}

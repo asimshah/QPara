@@ -1,0 +1,29 @@
+@import "_theme.components";
+
+.busy-wait {
+    $current: theme-colour('primary', 'light');
+    z-index: 99999;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+    background-color: transparentize($current, 0.5); // rgba(127, 10, 73, 0.1);
+    /*pointer-events: none;*/
+    .spinner {
+        color: lighten( theme-colour('primary'), 25% );
+        font-size: 48px;
+        margin: auto auto;
+    }
+
+    &.busy {
+        display: flex;
+
+        > div:first-child {
+            flex: 1;
+            text-align: center;
+            align-self: center;
+        }
+    }
+}

@@ -1,0 +1,22 @@
+@import "../../fastnet/themes/_themes.scss";
+@include theme-buttons();
+
+.dashboard {
+  margin: 1em;
+
+  .dashboard-table {
+    width: 100%;
+    margin-top: 1em;
+
+    .section-header {
+      font-weight: bold;
+    }
+
+    .section-items {
+      display: grid;
+      grid-template-columns: repeat(4, auto) 1fr;
+      grid-column-gap: $theme-gutter;
+      align-items: flex-start;
+    }
+  }
+}

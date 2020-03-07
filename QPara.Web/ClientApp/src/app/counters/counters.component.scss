@@ -1,0 +1,100 @@
+.counters-page {
+  margin: 18px;
+}
+
+.heading {
+  font-size: 22px;
+}
+
+.sub-heading {
+  font-size: 14px;
+}
+
+.current-totals {
+  display: flex;
+
+  div {
+    margin: 12px;
+  }
+}
+
+.current-totals-table {
+  thead {
+    th {
+      border: 1px solid gray;
+      font-size: smaller;
+      text-align: center;
+    }
+  }
+
+  td {
+    border: 1px solid gray;
+  }
+
+  tbody {
+    tr {
+      td {
+        padding-left: 4px;
+        padding-right: 4px;
+        min-width: 60px;
+
+        &:first-child {
+          font-weight: bold;
+          font-size: smaller;
+        }
+
+        &:not(:first-child) {
+          text-align: right;
+        }
+      }
+    }
+  }
+}
+
+.leaver-joiners {
+  margin-top: 24px;
+  margin-bottom: 24px;
+
+  table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    thead {
+      tr {
+        th {
+          padding-left: 4px;
+          padding-right: 4px;
+          border: 1px solid gray;
+          font-size: smaller;
+          text-align: center;
+
+          &.bracketed {
+            background-color: #eeeeee;
+          }
+        }
+      }
+    }
+
+    tbody {
+      td {
+        border: 1px solid gray;
+      }
+
+      tr {
+        td {
+          padding-left: 4px;
+          padding-right: 4px;
+          /*&.total-members, &.joiners, &.leavers {
+                        text-align: right;
+                    }*/
+          &:not(:first-child) {
+            text-align: right;
+          }
+
+          &.bracketed {
+            background-color: #eeeeee;
+          }
+        }
+      }
+    }
+  }
+}

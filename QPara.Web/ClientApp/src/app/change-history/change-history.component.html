@@ -1,0 +1,20 @@
+<div class="changes-container">
+  <div class="five-column-grid">
+    <div class="heading">Date</div>
+    <div class="heading">Changed By</div>
+    <div class="heading">Member Name</div>
+    <div class="heading numeric">Zone</div>
+    <div class="heading">Description</div>
+  </div>
+  <div class="five-column-grid change-list">
+
+    <ng-container class="change-item" *ngFor="let item of changes">
+      <div>{{item.dateTime}}</div>
+      <div>{{item.madeBy}}</div>
+      <div>{{item.memberName}}</div>
+      <div *ngIf="item.zoneNumber > 0" class="numeric">{{item.zoneNumber}}</div>
+      <div *ngIf="!(item.zoneNumber > 0)" class="numeric">&nbsp;</div>
+      <div>{{item.description}}</div>
+    </ng-container>
+  </div>
+</div>

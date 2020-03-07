@@ -1,0 +1,49 @@
+@import "../../fastnet/themes/_themes";
+
+$navigation-link-foreground: theme-colour('background');
+$navigation-link-background: theme-colour('primary', 'light');
+
+:host {
+  display: block;
+  width: 180px;
+}
+
+.not-visible {
+  display: none;
+}
+
+li .glyphicon {
+  margin-right: 10px;
+}
+
+/* Highlighting rules for nav menu items */
+li.link-active a,
+li.link-active a:hover,
+li.link-active a:focus {
+  background-color: $navigation-link-background;
+  color: white;
+}
+
+.main-nav {
+  height: 100%;
+  ul {
+    padding: 0;
+  }
+
+  li {
+    list-style: none;
+
+    a {
+      display: block;
+      padding: 8px;
+      text-decoration: none;
+      color: $navigation-link-foreground;
+
+      &:hover {
+        background-color: $navigation-link-foreground;
+        color: $navigation-link-background;
+      }
+    }
+  }
+}
+

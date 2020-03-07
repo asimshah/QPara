@@ -1,0 +1,14 @@
+//@import "shared.component.scss";
+@import "_theme.components.scss";
+:host {
+    display: block;
+}
+.number-input {
+    @extend %theme-text-input;
+
+    input[type=number] {
+        text-align: right;
+        max-width: 80px;
+        /*line-height: 22px;*/
+    }
+}

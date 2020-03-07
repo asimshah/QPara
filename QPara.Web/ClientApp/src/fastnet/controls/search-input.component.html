@@ -1,0 +1,17 @@
+<div class="search-input" [ngClass]="{'is-touch-device': isTouchDevice()}">
+    <label [for]="controlId" [ngStyle]="{display: hasLabel() ? 'block' : 'none'}">
+        <span>{{label}}</span>
+    </label>
+    <div class="control-container">
+        <input [id]="controlId" #focushere type="text" [placeholder]=placeHolderText [(ngModel)]="value" (blur)="onBlur()" (ngModelChange)="onTextChanged($event)" (keyup)="onKeyUp($event)" />
+        <button class="icon danger" [ngClass]="{'not-visible': value?.length === 0}" (click)="clearSearchText()">
+            <span class="fa fa-remove"></span>
+        </button>
+        <button class="icon" (click)="onSearchClick($event)">
+            <span class="fa fa-search"></span>
+        </button>
+    </div>
+    <div class="validation-text">
+        <span *ngIf="vr && vr.valid === false" class="text-error">{{vr.message}}</span>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+{
+    "Admins": [
+        {
+            "Name": "szalanczi@hotmail.com",
+            "Password": "P0rt-ugal"
+        },
+        {
+            "Name": "aszalanczi@hotmail.co.uk",
+            "Password": "Br00ks-ville"
+        },
+        {
+            "Name": "mag.mark@btinternet.com",
+            "Password": "M0re-cambe"
+        },
+        {
+            "Name": "asimshah@hotmail.com",
+            "Password": "S0ni-kudi"
+        }
+    ],
+  "StreetRepPassword":  "loca1area"
+}

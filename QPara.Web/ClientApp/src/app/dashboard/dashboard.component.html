@@ -1,0 +1,29 @@
+<div *ngIf="isReady" class="dashboard">
+  <dropdown-input *ngIf="user.type !== UserType.StreetRepresentative" label="Choose a zone:" name="zones" [(ngModel)]="zone" [items]="zoneList" (selectionChanged)="onSelectionChanged($event)"></dropdown-input>
+  <div class="dashboard-table">
+    <div class="section-header">Download Excel Spreadsheet:</div>
+    <div class="section-items">
+      <a class="button" href="membership/get/sheet/{{zoneNumber}}/{{StandardLists.ZoneMembers}}" [ngClass]="{disabled: !zoneNumber || zoneNumber === 0}">Member List</a>
+      <a class="button" href="membership/get/sheet/{{zoneNumber}}/{{StandardLists.ZonePaymentsOutstanding}}" [ngClass]="{disabled: !zoneNumber || zoneNumber === 0}">Oustanding Payments</a>
+      <a class="button" href="membership/get/sheet/{{zoneNumber}}/{{StandardLists.ZoneMinutes}}" [ngClass]="{disabled: !zoneNumber || zoneNumber === 0}">Minutes Delivery</a>
+    </div>
+    <div class="section-header">Open Outlook with Emails as Bcc:</div>
+    <div class="section-items">
+      <a class="button" href="mailto://{{user.name}}?bcc={{zoneAddresses && ToEmailAddressList(zoneAddresses.addressesForMembers)}}" [ngClass]="{disabled: !zoneNumber || zoneNumber === 0}">Member List</a>
+      <a class="button" href="mailto://{{user.name}}?bcc={{zoneAddresses && ToEmailAddressList(zoneAddresses.addressesForPaymentsOutstanding)}}" [ngClass]="{disabled: !zoneNumber || zoneNumber === 0}">Oustanding Payments</a>
+      <a class="button" href="mailto://{{user.name}}?bcc={{zoneAddresses && ToEmailAddressList(zoneAddresses.addressesForMinutes)}}" [ngClass]="{disabled: !zoneNumber || zoneNumber === 0}">Minutes By Email</a>
+    </div>
+    <div class="section-header">Get Email Addresses for Pasting:</div>
+    <div *ngIf="isReady" class="section-items">
+      <button [ngClass]="{disabled: !zoneNumber || zoneNumber === 0}" (click)="copyZoneMembers()">Member List</button>
+      <button [ngClass]="{disabled: !zoneNumber || zoneNumber === 0}" (click)="copyZonePaymentsOutstanding()">Oustanding Payments</button>
+      <button [ngClass]="{disabled: !zoneNumber || zoneNumber === 0}" (click)="copyZoneForMinutes()">Minutes By Email</button>
+      <button *ngIf="user.type !== UserType.StreetRepresentative" (click)="copyAllMembers()">All Members (i.e. all zones)</button>
+    </div>
+    <div class="section-header">Others:</div>
+    <div class="section-items">
+      <a class="button" href="membership/get/streetreplist">Street Rep List in Excel</a>
+    </div>
+  </div>
+</div>
+<popup-message></popup-message>

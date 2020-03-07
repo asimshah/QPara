@@ -1,0 +1,198 @@
+@import "../themes/_themes.scss";
+
+// use this file for all function, mixins and extensions used bu fastnet components
+
+%label-above {
+    margin-top: 0; //0.5em;
+    //margin-bottom: 0.125em;
+}
+
+%label-after {
+    margin-top: 0.5em;
+    margin-left: 0.25em;
+    margin-right: 0;
+}
+
+
+%theme-disabled {
+    pointer-events: none;
+
+
+    label {
+        color: theme-colour('disabled');
+
+        &.selected {
+            span:first-child {
+                border: 0.0625em solid theme-colour('disabled') !important;
+            }
+
+            span:nth-child(2) {
+                border: 0.0625em solid theme-colour('disabled') !important;
+                background-color: theme-colour('disabled') !important;
+            }
+
+            span:last-child {
+                color: theme-colour('disabled') !important;
+            }
+        }
+    }
+}
+
+
+%input-box {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-weight: normal;
+    border-radius: 0.25em;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+    padding-bottom: 0.25em;
+    padding-top: 0.25em;
+    border: 1px solid theme-colour('surface', 'light');
+    background: inherit;
+    color: theme-colour('surface');
+
+    &:focus {
+        outline: none;
+        border: 1px solid theme-colour('primary', 'light');
+    }
+}
+
+%theme-text-input {
+
+    label {
+        color: theme-colour('surface');
+
+        span {
+            @extend %label-above;
+        }
+        .hide {
+            display: none;
+        }
+    }
+
+    input {
+        @extend %input-box;
+    }
+
+    &.not-valid {
+        input {
+            border: 1px solid theme-colour('error');
+        }
+    }
+
+    &.disabled {
+        @extend %theme-disabled;
+
+        input {
+            border: 1px solid theme-colour('disabled');
+        }
+    }
+}
+
+%theme-enum-input {
+    $outer-circle-size: 13px;
+    $outer-circle-radius: 7px;
+    $outer-cicle-border-width: 0.875px;
+    $inner-circle-size: 7px;
+    $inner-circle-radius: 3.5px;
+    $inner-cicle-border-width: 0.875px; //0.0625em
+    display: grid;
+    grid-template-columns: auto;
+    align-items: flex-start;
+
+    .enum-border {
+        grid-column: 1;
+        grid-row: 1;
+        border: 1px solid theme-colour('primary');
+        border-radius: 0.25em;
+
+        &.disabled {
+            border: 1px solid theme-colour('disabled');
+            pointer-events: none;
+            color: theme-colour('disabled');
+        }
+    }
+
+    .enum-label {
+        grid-column: 1;
+        grid-row: 1;
+        align-self: flex-start;
+        justify-self: left;
+        background-color: white;
+        position: relative;
+        top: -10px;
+        left: 7px;
+        padding-left: 4px;
+        padding-right: 4px;
+        font-weight: 500;
+
+        &.disabled {
+            color: theme-colour('disabled');
+        }
+    }
+
+    .enum-group {
+        display: grid;
+        grid-template-columns: auto;
+        margin-top: 7px;
+        margin-bottom: 5px;
+        margin-right: 5px;
+
+        .enum-item {
+            display: grid;
+            grid-template-columns: 24px auto;
+            align-items: center;
+            justify-items: center;
+
+            span.outer-circle {
+                grid-column: 1;
+                grid-row: 1;
+                width: $outer-circle-size; //0.875em;
+                height: $outer-circle-size; //0.875em;
+                border: $outer-cicle-border-width solid rgb(192,192,192);
+                border-radius: $outer-circle-radius; // 0.5em;
+            }
+
+            span.inner-circle {
+                grid-column: 1;
+                grid-row: 1;
+                width: $inner-circle-size; //0.875em;
+                height: $inner-circle-size; //0.875em;
+                border: $inner-cicle-border-width solid darken(theme-colour('primary'), 10%);
+                border-radius: $inner-circle-radius; //0.25em;
+                background: theme-colour('primary');
+                display: none;
+            }
+
+            span.item-label {
+                grid-column: 2;
+                grid-row: 1;
+                justify-self: left;
+            }
+
+            &.selected {
+                span.inner-circle {
+                    display: inline;
+                }
+            }
+        }
+    }
+}
+.text-error {
+    font-style: italic;
+    color: theme-colour('error');
+}
+
+.validation-text {
+    font-size: 12px;
+}
+label {
+    margin-bottom: 0;
+    width: 100%;
+
+    span {
+        font-weight: 600;
+    }
+}

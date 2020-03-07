@@ -1,0 +1,24 @@
+// ** this is a sample theme file **
+// create a file in the same directory as this file called _current.theme.scss
+// containing colour override as in the example below
+// and any other 'global' scss stuff needed by the application
+
+
+$theme-colours: map-merge($default-colours, (
+    'background' : ( 'base': white, 'light': white, 'dark': #e9e9e9 ),
+    'surface' : ( 'base': $mdc-grey-900, 'light': $mdc-grey-600, 'dark': black ),
+    'primary': ('base': $mdc-green-700, 'light': $mdc-green-600, 'dark': $mdc-green-800),
+    'accent': ('base': $mdc-teal-A400, 'light': $mdc-teal-A100, 'dark': $mdc-teal-A700) ) );
+
+$dialog-colours: map-merge($default-dialog-colours, (
+    'background' : ( 'base': white, 'light': white, 'dark': #e9e9e9 ),
+    'surface' : ( 'base': $mdc-grey-900, 'light': $mdc-grey-600, 'dark': black ),
+    'chromeborder': ('base': $mdc-green-900, 'light': $mdc-green-700, 'dark': $mdc-green-900),
+    'captionbackground':('base': $mdc-green-900, 'light':$mdc-green-700, 'dark': $mdc-green-900) ));
+
+$button-colours: map-merge($default-button-colours, (
+    'primary' : ( 'foreground' : white, 'background': $mdc-green-700, 'border': $mdc-green-700, 'hover-foreground' : $mdc-green-700, 'hover-background': white, 'hover-border': $mdc-green-700),
+    'secondary': ( 'foreground' : white, 'background': $mdc-green-600, 'border': $mdc-green-900, 'hover-foreground' : $mdc-green-600, 'hover-background': white, 'hover-border': white),
+    'cancel': ('foreground' : white, 'background': $mdc-green-400, 'border': $mdc-green-400, 'hover-foreground': $mdc-green-400, 'hover-background': white))
+);
+$high-accent-colour: #f9ca06; // theme-colour('accent');

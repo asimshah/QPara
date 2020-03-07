@@ -1,0 +1,280 @@
+@import "_palette";
+@import "_current.theme.scss";
+
+$theme-colours: $default-colours !default;
+$dialog-colours: $default-dialog-colours !default;
+$button-colours: $default-button-colours !default;
+
+$theme-gutter: 8px;
+$theme-gutter-narrow: $theme-gutter / 2;
+$theme-gutter-fine: $theme-gutter-narrow / 2;
+
+@function theme-colour($name: 'primary', $variant: 'base' ) {
+    $colour: null;
+    $colours: $theme-colours;
+
+    $spectrum: map-get($colours, $name);
+
+    @if $spectrum {
+        $colour: map-get($spectrum, $variant);
+    }
+
+    @return $colour;
+}
+
+@function theme-dialog-colour($name: 'primary', $variant: 'base' ) {
+    $colour: null;
+    $colours: $dialog-colours;
+
+    $spectrum: map-get($colours, $name);
+
+    @if $spectrum {
+        $colour: map-get($spectrum, $variant);
+    }
+
+    @return $colour;
+}
+
+@function theme-button-colour($name: 'primary', $variant: 'foreground') {
+    $colour: null;
+    $colours: $button-colours;
+
+    $spectrum: map-get($colours, $name);
+
+    @if $spectrum {
+        $colour: map-get($spectrum, $variant);
+    }
+
+    @return $colour;
+}
+
+@mixin set-image($size: 100px) {
+    height: $size;
+    width: $size;
+    object-fit: contain;
+}
+
+@mixin theme-page($selector: ".component-container") {
+    #{$selector} {
+        background-color: theme-colour('background');
+        color: theme-colour('surface');
+    }
+
+    .page-caption {
+        margin-top: 0;
+        font-size: 1.5em;
+
+        .sub-heading {
+            font-size: 0.8em;
+        }
+    }
+
+    .annotation, .help-text {
+        font-style: italic;
+        font-size: x-small;
+    }
+}
+@mixin x-set-button-colours($name) {
+    background-color: theme-button-colour($name, 'background');
+    color: theme-button-colour($name, 'foreground');
+    border: 1px solid theme-button-colour($name, 'border');
+    outline: none;
+
+    &:hover {
+        background-color: theme-button-colour($name, 'hover-background');
+        color: theme-button-colour($name, 'hover-foreground');
+        border: 1px solid theme-button-colour($name, 'hover-border');
+    }
+
+    &:focus {
+        border: 1px solid theme-colour('accent');
+    }
+}
+
+@mixin theme-buttons($font-size: 16px) {
+    button.icon {
+        height: 100%;
+        min-width: auto;
+        border: none;
+        border-radius: 0;
+        /*font-size: 1.5em;*/
+        display: flex;
+        justify-content: center;
+        padding-right: 0.25em;
+        padding-left: 0;
+        margin: $font-size / 3;
+        background-color: transparent;
+        color: theme-colour('primary');
+
+        &:hover {
+            color: theme-colour('accent');
+        }
+
+        span.fa {
+            font-size: $font-size;
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &.danger {
+            color: theme-colour('error');
+
+            &:hover {
+                color: theme-colour('accent');
+            }
+        }
+    }
+
+    button:not(.icon), a.button {
+        font-family: inherit;
+        font-size: $font-size;
+        line-height: $font-size;
+        cursor: pointer;
+        border-radius: 0.25em;
+        margin: 0.125em;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        padding-top: 0.25em;
+        padding-bottom: 0.45em;
+        min-width: 72px;
+        max-height: 2.2em;
+        white-space: nowrap;
+        @include x-set-button-colours('primary');
+
+
+        &.small {
+            font-size: $font-size / 1.6; //10px;
+            padding: 0.3em;
+        }
+
+
+        &.secondary {
+            @include x-set-button-colours('secondary');
+        }
+
+        &.danger {
+            @include x-set-button-colours('danger');
+        }
+
+        &.cancel {
+            @include x-set-button-colours('cancel');
+        }
+
+        &.link {
+            background: none;
+            border: none;
+            color: theme-colour('primary');
+            text-align: left;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        &[disabled], &.disabled {
+            cursor: none;
+            pointer-events: none;
+            @include x-set-button-colours('disabled');
+        }
+    }
+    a.button {
+        text-decoration: none;
+    }
+}
+
+
+
+@mixin theme-menu-bar($selector: ".menu-bar") {
+    #{$selector} {
+        background-color: lighten( theme-colour('primary', 'light'), 20%);
+        padding: $theme-gutter-fine $theme-gutter-narrow;
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows: auto;
+
+        > * {
+            grid-column: 1;
+            grid-row: 1;
+            justify-self: left;
+            display: grid;
+
+            > * {
+                grid-row: 1;
+                white-space: nowrap;
+            }
+        }
+
+        .align-right {
+            width: 100%;
+            grid-column: 2;
+            grid-row: 1;
+            justify-content: flex-end;
+        }
+    }
+}
+
+@mixin theme-dialog-commands {
+  /* note: called by inlilne-dialog, popup-dialog, and popup-message,not required elsewhere? */
+  %command-grid {
+    //width: 100%;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    grid-column-gap: 0.2em;
+  }
+
+  %command-items {
+    > * {
+      margin-top: $theme-gutter-narrow;
+      margin-bottom: $theme-gutter-narrow;
+      width: 100%;
+      grid-row: 1;
+      white-space: nowrap;
+    }
+  }
+
+  .dialog-commands {
+    font-family: inherit;
+    border-radius: 0.25em;
+    padding-left: $theme-gutter-narrow;
+    padding-right: $theme-gutter-narrow;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto;
+    /*/deep/*/ [dialogcommands] {
+      @extend %command-grid;
+      padding-left: $theme-gutter-narrow;
+      padding-right: $theme-gutter-narrow;
+      justify-content: center;
+      grid-column: 2;
+
+      @extend %command-items;
+
+      &[left] {
+        @extend %command-grid;
+        justify-content: flex-start;
+        grid-column: 1;
+        @extend %command-items;
+      }
+
+      &[right] {
+        @extend %command-grid;
+        justify-content: flex-end;
+        grid-column: 3;
+        @extend %command-items;
+      }
+    }
+  }
+
+  popup-dialog {
+    .dialog-commands {
+      background-color: theme-colour('shadow');
+    }
+  }
+}
+
+
+

@@ -1,0 +1,50 @@
+﻿
+@import "_theme.components.scss";
+
+:host {
+    color: theme-colour('surface');
+    font-family: inherit;
+
+    ul {
+        padding-left: 0;
+    }
+}
+
+
+.tree-view {
+    ul {
+        padding-left: 20px;
+
+        &.level-0 {
+            padding-left: 0;
+        }
+    }
+
+    li {
+        list-style: none;
+    }
+}
+.tree-node {
+    display: flex;
+    align-items: center;
+}
+.tree-icon {
+    margin-right: 0.25em;
+}
+.item-text {
+    padding-bottom: 0.20em;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+    border-radius: 0.25em;
+    margin-left: 0.25em;
+    border: 1px solid transparent;
+
+    &.selected {
+        font-weight: bold;
+        //border: 1px solid theme-colour('primary');
+    }
+
+    &:hover {
+        border: 1px solid theme-colour('surface');
+    }
+}

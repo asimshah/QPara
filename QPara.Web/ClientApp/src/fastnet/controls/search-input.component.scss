@@ -1,0 +1,60 @@
+@import "_theme.components.scss";
+@include theme-buttons();
+
+:host {
+    width: 100%;
+    display: block;
+    background-color: transparent;
+}
+
+.search-input {
+    border: 1px solid theme-colour('surface');
+    border-radius: 0.25em;
+    background-color: transparent;
+
+    &.not-valid {
+        input:not(:focus) {
+            border: 1px solid theme-colour('error');
+        }
+    }
+
+    label {
+        span {
+            @extend %label-above;
+            display: block;
+        }
+    }
+
+    .control-container {
+        /*border: 1px solid theme-colour('surface');
+        border-radius: 0.25em;*/
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        align-items: center;
+
+        input {
+            @extend %input-box;
+            width: 100%;
+            border: none;
+            border-radius: 0;
+            vertical-align: text-bottom;
+            background-color: transparent;
+            color: theme-colour('surface');
+
+            &:focus {
+                outline: none;
+                border: none;
+            }
+        }
+    }
+
+    &.is-touch-device {
+        @include theme-buttons(3em);
+
+        .control-container {
+            input {
+                font-size: 2em;
+            }
+        }
+    }
+}

@@ -1,0 +1,60 @@
+<popup-dialog caption="Payment Editor">
+  <div dialogbody>
+    <ng-container *ngIf="payment">
+      <div class="payment-form">
+        <dropdown-input label="QPara Year" name="qparaYear" [(ngModel)]="payment.subscriptionYearItem" [items]="subscriptionYearList"></dropdown-input>
+        <div>
+          <div class="recd-on-input">
+            <date-input label="Received On" name="recdOn" [(ngModel)]="payment.receivedDate" [validator]="validators.item('recdOn')"></date-input>
+          </div>
+          <div class="amount-recd-input">
+            <number-input label="Amount Received" name="amountReceived" [(ngModel)]="payment.amountReceived"></number-input>
+          </div>
+          <div>
+            <bool-input label="Waive Payment" name="ispaid" [(ngModel)]="payment.isPaid"></bool-input>
+            <span class="annotation">Outstanding payments can be marked as waived</span>
+            <div class="annotation">They will then be treated as not outstanding</div>
+          </div>
+        </div>
+        <div class="payment-types">
+          <enum-input label="Payment Type" name="paymentType" [(ngModel)]="payment.type" [enumType]="PaymentType"></enum-input>
+        </div>
+      </div>
+      <div class="payment-notes">
+        <div *ngIf="payment.notes && payment.notes.length > 0">
+          <div class="notes-heading">Notes:</div>
+          <div class="notes scrolling-table">
+            <div class="table-header">
+              <div class="table-row">
+                <div class="table-column">Date</div>
+                <div class="table-column">Written By</div>
+                <div class="table-column">Note</div>
+              </div>
+            </div>
+            <div class="table-body">
+              <div class="table-row" *ngFor="let note of payment.notes">
+                <div class="table-column">{{note.formattedCreatedOn}}</div>
+                <div class="table-column">{{note.userName}}</div>
+                <div class="table-column note-content">
+                  <div class="note-line" *ngFor="let nl of note.noteLines">{{nl.line}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="!(payment.notes && payment.notes.length > 0)">
+          <div>This payment has no notes</div>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+  <div dialogcommands left>
+    <button (click)="onAddNote()">Add Payment Note</button>
+  </div>
+  <div dialogcommands right>
+    <button [ngClass]="{'disabled': !hasChanged()}" (click)="onSave()">Save Changes</button>
+    <!--<button *ngIf="canShowButton(commands.closePaymentEditor)" (click)="onClose()">Close</button>-->
+    <button class="cancel" (click)="onCancel()">Cancel</button>
+  </div>
+</popup-dialog>
+<qp-note-editor></qp-note-editor>

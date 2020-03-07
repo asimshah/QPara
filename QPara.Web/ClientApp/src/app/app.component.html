@@ -1,0 +1,14 @@
+<div [ngClass]="{'hidden': isLoggedIn()}" class="banner">
+  <h2>QPARA Membership Web site</h2>
+</div>
+<div class='main-container'>
+  <div class='left-panel'>
+    <div [ngClass]="{'hidden': !isLoggedIn()}">
+      <div class="app-name">QPARA Membership</div>
+      <nav-menu></nav-menu>
+    </div>
+  </div>
+  <div class='right-panel'>
+    <router-outlet></router-outlet>
+  </div>
+</div>

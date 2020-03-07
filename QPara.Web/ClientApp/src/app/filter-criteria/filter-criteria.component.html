@@ -1,0 +1,59 @@
+<popup-dialog [caption]="caption">
+  <div dialogbody>
+    <div class="help-text">Use the checkbox to enable a particular filter, then set the value to select for</div>
+    <div class="selection-list">
+      <ng-container *ngFor="let cd of filterCriteria">
+        <div class="filter-setting" *ngIf="cd.name === ColumnNames.PaymentIsOutstanding">
+          <bool-input label="{{ColumnNames[cd.name]}}" name="paymentIsOutstanding" [(ngModel)]="cd.filter.enabled"></bool-input>
+          <bool-enum-input [columns]="2" [disabled]="!cd.filter.enabled" name="choicePIO" truelabel="Yes" falselabel="No" [(ngModel)]="cd.filter.matchAgainst"></bool-enum-input>
+        </div>
+        <div class="filter-setting" *ngIf="cd.name === ColumnNames.ZoneNumber">
+          <bool-input label="{{ColumnNames[cd.name]}}" name="zoneNumber" [(ngModel)]="cd.filter.enabled"></bool-input>
+          <dropdown-input name="zones" [disabled]="!cd.filter.enabled" [(ngModel)]="cd.filter.matchAgainst" [items]="zoneList"></dropdown-input>
+        </div>
+        <div class="filter-setting" *ngIf="cd.name === ColumnNames.PaymentMethod">
+          <bool-input label="{{ColumnNames[cd.name]}}" name="paymentMethod" [(ngModel)]="cd.filter.enabled"></bool-input>
+          <enum-input [columns]="2" [disabled]="!cd.filter.enabled" name="paymentMethods" [(ngModel)]="cd.filter.matchAgainst" [enumType]="PaymentMethod"></enum-input>
+        </div>
+        <div class="filter-setting" *ngIf="cd.name === ColumnNames.IsSuspended">
+          <bool-input label="{{ColumnNames[cd.name]}}" name="isSuspended" [(ngModel)]="cd.filter.enabled"></bool-input>
+          <bool-enum-input [columns]="2" [disabled]="!cd.filter.enabled" name="isSuspendedChoice" [(ngModel)]="cd.filter.matchAgainst" truelabel="Yes" falselabel="No"></bool-enum-input>
+        </div>
+        <div class="filter-setting" *ngIf="cd.name === ColumnNames.MinutesDeliveryMethod">
+          <bool-input label="{{ColumnNames[cd.name]}}" name="minutesDeliveryMethod" [(ngModel)]="cd.filter.enabled"></bool-input>
+          <enum-input [columns]="3" [disabled]="!cd.filter.enabled" name="minutesDeliveryMethods" [(ngModel)]="cd.filter.matchAgainst" [enumType]="MinutesDeliveryMethod"></enum-input>
+        </div>
+        <div class="filter-setting" *ngIf="cd.name === ColumnNames.SubscriptionType">
+          <bool-input label="{{ColumnNames[cd.name]}}" name="subscriptionType" [(ngModel)]="cd.filter.enabled"></bool-input>
+          <enum-input [columns]="3" [disabled]="!cd.filter.enabled" name="subscriptionTypes" [(ngModel)]="cd.filter.matchAgainst" [enumType]="SubscriptionType"></enum-input>
+        </div>
+        <div class="filter-setting" *ngIf="cd.name === ColumnNames.SubscriptionPeriod">
+          <bool-input label="{{ColumnNames[cd.name]}}" name="subscriptionPeriod" [(ngModel)]="cd.filter.enabled"></bool-input>
+          <enum-input [columns]="2" [disabled]="!cd.filter.enabled" name="subscriptionPriods" [(ngModel)]="cd.filter.matchAgainst" [enumType]="SubscriptionPeriod"></enum-input>
+        </div>
+        <div class="filter-setting" *ngIf="cd.name === ColumnNames.JoinedOn">
+          <bool-input label="{{ColumnNames[cd.name]}}" name="joinedOn" [(ngModel)]="cd.filter.enabled"></bool-input>
+          <date-input label="After" [disabled]="!cd.filter.enabled" name="joinedOnAfter" [(ngModel)]="cd.filter.greaterThan"></date-input>
+          <date-input label="Before" [disabled]="!cd.filter.enabled" name="joinedOnBefore" [(ngModel)]="cd.filter.lessThan"></date-input>
+        </div>
+        <div class="filter-setting" *ngIf="cd.name === ColumnNames.HasLeft">
+          <bool-input label="{{ColumnNames[cd.name]}}" name="hasleft" [(ngModel)]="cd.filter.enabled"></bool-input>
+          <bool-enum-input [columns]="2" [disabled]="!cd.filter.enabled" name="hasLeftChoice" [(ngModel)]="cd.filter.matchAgainst" trueLabel="Yes" falseLabel="No"></bool-enum-input>
+        </div>
+        <div class="filter-setting" *ngIf="cd.name === ColumnNames.LeftOn">
+          <bool-input label="{{ColumnNames[cd.name]}}" name="leftOn" [(ngModel)]="cd.filter.enabled"></bool-input>
+          <date-input label="After" [disabled]="!cd.filter.enabled" name="leftOnAfter" [(ngModel)]="cd.filter.greaterThan"></date-input>
+          <date-input label="Before" [disabled]="!cd.filter.enabled" name="leftOnBefore" [(ngModel)]="cd.filter.lessThan"></date-input>
+        </div>
+        <div class="filter-setting" *ngIf="cd.name === ColumnNames.MemberCount">
+          <bool-input label="{{ColumnNames[cd.name]}}" name="selectMemberCount" [(ngModel)]="cd.filter.enabled"></bool-input>
+          <number-input [disabled]="!cd.filter.enabled" name="memberCount" [(ngModel)]="cd.filter.matchAgainst" [minNumber]="1" [maxNumber]="2"></number-input>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div dialogcommands>
+    <button (click)="onApply()">Apply</button>
+    <button class="cancel" (click)="onCancel()">Cancel</button>
+  </div>
+</popup-dialog>

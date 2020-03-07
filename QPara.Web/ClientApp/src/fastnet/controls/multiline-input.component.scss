@@ -1,0 +1,35 @@
+@import "_theme.components";
+.multiline-input {
+    //@extend %std-text-input;
+    @extend %theme-text-input;
+
+    &.disabled {
+        textarea {
+            border-color: theme-colour('disabled');
+        }
+    }
+
+    textarea {
+        width: 100%;
+        font-weight: normal;
+        resize: both;
+
+        &.resize-both {
+            resize: both;
+        }
+
+        &.resize-vertical {
+            resize: vertical;
+        }
+
+        &.resize-horizontal {
+            resize: horizontal
+        }
+
+        &.resize-none {
+            resize: none;
+        }
+
+        border-radius: 0.25em;
+    }
+}

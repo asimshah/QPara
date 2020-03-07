@@ -1,0 +1,27 @@
+﻿
+.scrolling-table {
+    overflow: hidden;
+    .table-header, .table-body {
+        display: grid;
+        //grid-template-columns: repeat(4, auto);
+        grid-template-rows: auto;
+        grid-auto-flow: row;
+
+        .table-row {
+            //all:unset;
+            display: grid;
+            grid-column: 1 / -1;
+            align-items: flex-start;
+        }
+
+        .table-column {
+            padding-left: 0.25em;
+            padding-right: 0.25em;
+            align-self: stretch;
+        }
+    }
+    .table-body {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+}

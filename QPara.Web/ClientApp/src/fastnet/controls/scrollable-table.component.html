@@ -1,0 +1,12 @@
+﻿<div class="scrollable-table">
+    <div class="caption-panel">
+        <div *ngIf="caption && caption.trim().length > 0" class="caption">{{caption}}</div>
+        <search-input *ngIf="showSearch" placeHolderText="Search" [(ngModel)]="searchText" (clearClick)="onSearchClear()" (searchClick)="onSearch()"></search-input>
+    </div>
+    <ng-container *ngIf="ready; else loading">
+        <ng-content></ng-content>
+    </ng-container>
+    <ng-template #loading>
+        <div class="busy-text">{{busyText}}</div>
+    </ng-template>
+</div>

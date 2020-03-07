@@ -1,0 +1,16 @@
+<div class="documents">
+  <div class="header">Standard Documents</div>
+  <div class="help-text">
+    <div>Use the mouse to click on a document in the first column and it will be downloaded from the site</div>
+  </div>
+  <table>
+    <tr>
+      <th>Document</th>
+      <th>Description</th>
+    </tr>
+    <tr *ngFor="let item of list; let i = index; let odd = odd; let even = even;" [ngClass]="{odd: odd, even: even}">
+      <td><a class="document-link" href="membership/get/document/{{i}}" download>{{item.name}}</a></td>
+      <td>{{item.description}}</td>
+    </tr>
+  </table>
+</div>

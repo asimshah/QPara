@@ -1,0 +1,10 @@
+<popup-dialog caption="Note Editor">
+  <div dialogbody>
+    <div class="annotation">Enter note in the box. Today's date will be attached automatically</div>
+    <multiline-input name="note" [(ngModel)]="text" rows="6"></multiline-input>
+  </div>
+  <div dialogcommands right>
+    <button (click)="onSave()" [ngClass]="{'disabled': text.trim().length === 0}">Save Note &amp; Close</button>
+    <button (click)="onClose()">Cancel</button>
+  </div>
+</popup-dialog>

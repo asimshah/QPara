@@ -1,0 +1,37 @@
+﻿
+
+$table-header-colour: theme-colour('primary', 'dark');
+$table-row-hover-colour: lighten($table-header-colour, 50%);
+.std-scrolling-table-theme {
+    //border: 1px solid black;
+    .table-header {
+        .table-row {
+            background-color: $table-header-colour;
+            color: white;
+            font-weight: 500;
+            border: 1px solid black;
+        }
+
+        .table-column {
+            &:not(:first-child) {
+                border-left: 1px solid white;
+            }
+        }
+    }
+
+    .table-body {
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+
+        .table-row:not(:last-child) {
+            border-bottom: 1px solid black;
+        }
+
+        .table-column {
+            &:not(:first-child) {
+                border-left: 1px solid black;
+            }
+        }
+    }
+}

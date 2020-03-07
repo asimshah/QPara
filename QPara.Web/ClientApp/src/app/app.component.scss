@@ -1,0 +1,120 @@
+@import "../fastnet/themes/_themes";
+@include theme-buttons();
+
+
+
+/*body {
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}*/
+
+.hidden {
+  display: none;
+}
+.banner {
+  overflow: auto;
+  background-color: theme-colour('primary', 'dark'); // #388e3c;
+  color: white;
+  padding: 0.5em;
+}
+
+.calendar {
+  .day-cell {
+    &.is-sunday {
+      background-color: red;
+      color: white;
+    }
+  }
+}
+
+.service-wait {
+  $current: theme-colour('primary', 'light');
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: none;
+  /*opacity: 0.1;*/
+  background-color: transparentize($current, 0.9); // rgba(127, 10, 73, 0.1);
+  pointer-events: none;
+
+  .spinner {
+    color: theme-colour('primary');
+    font-size: 48px;
+    margin: auto auto;
+  }
+
+  &.busy {
+    display: flex;
+
+    > div:first-child {
+      flex: 1;
+      text-align: center;
+      align-self: center;
+    }
+  }
+}
+
+.scrollable-table {
+  overflow: auto;
+
+  table {
+    width: 100%;
+
+    thead {
+      display: table;
+      overflow: auto;
+      width: 100%;
+
+      > tr:first-child {
+        position: relative;
+      }
+    }
+
+    tbody {
+      overflow: auto;
+      display: block;
+      height: 200px; // you can & should reset this
+    }
+
+    th, td {
+      padding-left: 0.25em;
+      padding-right: 0.25em;
+    }
+  }
+}
+
+
+.main-container {
+  height: 100%;
+  display: flex;
+}
+
+.left-panel {
+  background-color: theme-colour('primary', 'dark'); // #7f0a49;
+  /*padding: 4px;*/
+  > div {
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+  .app-name {
+    font-size: 22px;
+    color: white;
+    word-wrap: break-word;
+  }
+}
+
+.right-panel {
+  padding: 4px;
+  flex: 1;
+}
+
+.message-body {
+  margin: 0.5em;
+}
+
+.headline {
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}

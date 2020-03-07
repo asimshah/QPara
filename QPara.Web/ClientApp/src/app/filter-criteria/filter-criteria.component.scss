@@ -1,0 +1,30 @@
+@import "../../fastnet/themes/_themes.scss";
+
+.help-text {
+  font-style: italic;
+  font-size: 10pt;
+}
+
+.selection-list {
+  padding: 1em;
+}
+
+.filter-setting {
+  margin-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+
+  > * {
+    &:first-child {
+      width: 200px;
+    }
+
+    &:not(:first-child) {
+      margin-left: 0.25em;
+    }
+  }
+
+  dropdown-input {
+    max-width: 300px;
+  }
+}

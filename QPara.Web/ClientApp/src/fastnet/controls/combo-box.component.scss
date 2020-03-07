@@ -1,0 +1,108 @@
+@import "_theme.components";
+
+.combo-box {
+    //@extend %std-text-input;
+    @extend %theme-text-input;
+
+    &.disabled {
+        .combo-container {
+            .text-box {
+                color: #dadada;
+                border-color: #dadada;
+            }
+        }
+    }
+
+
+    .combo-container {
+        .text-box {
+            input {
+                width: 100%;
+                border: none;
+                outline: none;
+
+                &.align-centre {
+                    text-align: center;
+                }
+
+                &:focus {
+                    outline: none;
+                    border: none;
+                }
+            }
+
+            display: grid;
+            align-items: center;
+            grid-template-columns: auto fit-content(40px);
+            border: 1px solid #808080;
+            border-radius: 0.25em;
+
+            .down-icon {
+                justify-self: center;
+                padding-left: 0.5em;
+                padding-right: 0.5em;
+
+                &:hover {
+                    color: theme-button-colour('primary', 'hover-foreground');
+                }
+            }
+        }
+
+        .dropdown-panel {
+            border-left: 1px solid #808080;
+            border-right: 1px solid #808080;
+            border-bottom: 1px solid #808080;
+            border-bottom-left-radius: 0.25em;
+            border-bottom-right-radius: 0.25em;
+            position: absolute;
+            background-color: white;
+            z-index: 999;
+            overflow-y: auto;
+
+            .inner-panel {
+                display: grid;
+                grid-template-columns: auto;
+                grid-template-rows: 20px;
+                //height: 256px;
+                .drop-item {
+                    cursor: pointer;
+                    padding-left: 0.25em;
+                    padding-right: 0.25em;
+                    white-space: nowrap;
+                    overflow-x: hidden;
+                    text-overflow: ellipsis;
+
+                    &:hover {
+                        background-color: theme-colour('primary');
+                        color: white;
+                    }
+                }
+            }
+        }
+
+        &.is-open {
+            .text-box {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        }
+
+        &.compact {
+            .text-box {
+                border: none;
+                border-radius: 0.25em;
+
+                .down-icon {
+                    font-size: 8px;
+                    padding-left: .5em;
+                    padding-right: .5em;
+                }
+            }
+
+            .dropdown-panel {
+                border: 1px solid #808080;
+                border-radius: 0.25em;
+            }
+        }
+    }
+}

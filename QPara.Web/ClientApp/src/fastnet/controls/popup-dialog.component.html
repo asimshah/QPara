@@ -1,0 +1,16 @@
+<div class="popup-dialog" >
+    <div #overlay class="popup-window" [ngStyle]="getOverlayStyle()">
+        <div class="window-caption" [ngClass]="getCaptionClass()" >
+            <ng-content select="[windowcaption]"></ng-content>
+            <div *ngIf="caption">{{caption}}</div>
+        </div>
+        <div class="dialog-body"  >
+            <ng-content select="[dialogbody]"></ng-content>
+        </div>
+        <div class="dialog-commands">
+            <ng-content select="[dialogcommands]"></ng-content>
+            <ng-content select="[dialogcommands]"></ng-content>
+            <ng-content select="[dialogcommands]"></ng-content>
+        </div>
+    </div>
+</div>

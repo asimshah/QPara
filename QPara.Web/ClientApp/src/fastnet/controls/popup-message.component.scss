@@ -1,0 +1,11 @@
+﻿@import "../themes/_themes.scss";
+
+popup-dialog {
+    @include theme-buttons;
+    @include theme-dialog-commands;
+    .message-body {
+        padding-left: $theme-gutter;
+        padding-right: $theme-gutter;
+        min-height: 100px;
+    }
+}

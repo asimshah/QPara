@@ -1,0 +1,9 @@
+﻿@import "../themes/_themes.scss";
+@include theme-dialog-commands;
+:host {
+    display: block;
+}
+.dialog-body {
+    padding-top: $theme-gutter;
+    padding-bottom: $theme-gutter;
+}

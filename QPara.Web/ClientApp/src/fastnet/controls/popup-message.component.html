@@ -1,0 +1,17 @@
+﻿<popup-dialog #popupdialog [caption]="caption" [width]="width" [warning]="warning" [error]="error">
+    <!--<div windowcaption>
+        <div>{{caption}}</div>
+    </div>-->
+    <div dialogbody class="message-body">
+        <div *ngIf="isSingleMessage">
+            <div [innerHTML]="messages"></div>
+        </div>
+        <div *ngIf="!isSingleMessage">
+            <div *ngFor="let m of messages" [innerHTML]="m"></div>
+        </div>
+    </div>
+    <div dialogcommands>
+        <button (click)="onOk()">{{okLabel}}</button>
+        <button *ngIf="allowCancel" class="cancel" (click)="onCancel()">{{cancelLabel}}</button>
+    </div>
+</popup-dialog>

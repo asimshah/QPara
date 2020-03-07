@@ -1,0 +1,182 @@
+@import "_theme.components";
+
+:host {
+    display: block;
+}
+
+
+.text-input, .multiline-input, .password-input, .date-input, .number-input {
+    &.not-valid {
+        input:not(:focus) {
+            border: 1px solid $error-colour;
+        }
+
+        textarea {
+            border: 1px solid $error-colour;
+        }
+    }
+
+    label {
+        span {
+            @extend %label-above;
+            display: block;
+        }
+    }
+
+    input, textarea {
+        @extend %input-box;
+        //width: 100%;
+    }
+
+    textarea {
+        width: 100%;
+        resize: none;
+    }
+}
+
+.number-input {
+    input[type=number] {
+        text-align: right;
+        line-height: 22px;
+    }
+}
+.bool-input {
+    &.not-valid {
+        input:not(:focus) {
+            border: 1px solid $error-colour;
+        }
+    }
+
+    label {
+        span {
+            @extend %label-after;
+            margin-left: 0;
+        }
+    }
+
+    input {
+        @extend %input-box;
+        vertical-align: bottom;
+        margin-bottom: 0.25em;
+        margin-left: 0;
+
+    }
+}
+
+enum-input, bool-enum-input {
+    input[type=radio] {
+        display: none;
+    }
+
+    .enum-group {
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+
+        .enum-item {
+            margin-top: -0.5em;
+        }
+
+        label {
+            display: flex;
+            align-items: flex-start;
+            font-weight: 600;
+            $outer-circle-size: 13px;
+            $outer-circle-radius: 7px;
+            $outer-cicle-border-width: 0.875px;
+
+            span:first-child {
+                //display: inline-block;
+                width: $outer-circle-size; //0.875em;
+                height: $outer-circle-size; //0.875em;
+                border: $outer-cicle-border-width solid rgb(192,192,192);
+                border-radius: $outer-circle-radius; // 0.5em;
+            }
+
+            span:last-child {
+                margin-left: 0.25em;
+                margin-top: -0.25em;
+            }
+        }
+
+        label.selected {
+            span:last-child {
+                color: $focus-colour;
+            }
+
+            $inner-circle-size: 7px;
+            $inner-circle-radius: 3.5px;
+            $inner-cicle-border-width: 0.875px; //0.0625em
+            span:nth-child(2) {
+                //display: block;
+                width: $inner-circle-size; // 0.5em;
+                height: $inner-circle-size; //0.5em;
+                margin-right: 1.75px; // 0.125em;
+                margin-bottom: 1.75px; // 0.125em;
+                margin-left: -9.8px; // -0.7em;
+                margin-top: 3px; // 0.2em;
+                border: $inner-cicle-border-width solid darken($focus-colour, 10%);
+                border-radius: $inner-circle-radius; //0.25em;
+                background: $focus-colour;
+            }
+        }
+    }
+
+    &:not(.horizontal) {
+        .enum-item {
+            margin-bottom: 0.75em;
+        }
+    }
+
+    &.horizontal {
+        .enum-group {
+            padding-bottom: 0.5em;
+        }
+
+        .enum-group {
+            display: flex;
+
+            > div {
+                margin-right: 1em;
+            }
+        }
+    }
+
+    .enum-border {
+        border: 1px solid $border-colour;
+        border-radius: 0.25em;
+
+        .enum-label {
+            background-color: white;
+            display: inline-block;
+            position: relative;
+            top: -0.8em;
+            left: 0.5em;
+            padding-left: 0.2em;
+            padding-right: 0.2em;
+        }
+    }
+}
+
+.dropdown-input {
+    select {
+        font: inherit;
+        font-size: inherit;
+        width: 100%;
+        border-radius: 0.25em;
+        padding-left: 0.25em;
+        padding-right: 0.25em;
+        padding-bottom: 0.25em;
+        padding-top: 0.25em;
+        border: 1px solid $border-colour;
+    }
+}
+
+
+text-input, multiline-input, password-input,
+    date-input, bool-input, enum-input, bool-enum-input,
+    number-input, dropdown-input {
+    &.disabled {
+        //@extend %set-disabled;
+        @extend %theme-disabled;
+    }
+}

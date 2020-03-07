@@ -1,0 +1,47 @@
+//@import "shared.component.scss";
+
+@import "_theme.components.scss";
+.dropdown-input {
+    .dropdown-border {
+        border: 1px solid theme-colour('surface', 'light');
+        border-radius: 0.25em;
+        padding: 0.25em;
+    }
+
+    select {
+        font: inherit;
+        font-size: inherit;
+        color: inherit;
+        background-color: inherit;
+        width: 100%;
+        padding-left: 0.25em;
+        padding-right: 0.25em;
+        border: none;
+        outline: none;
+
+        &:focus {
+            outline: none;
+        }
+
+        option {
+            background-color: theme-colour('background');
+            color: theme-colour('surface');
+
+            &:hover {
+                background-color: theme-colour('surface');
+                color: theme-colour('background');
+            }
+        }
+    }
+
+    &.disabled {
+        @extend %theme-disabled;
+
+        .dropdown-border {
+            /*border: 1px solid theme-colour('disabled');*/
+            select {
+                color: theme-colour('disabled');
+            }
+        }
+    }
+}

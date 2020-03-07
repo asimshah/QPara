@@ -1,0 +1,5 @@
+﻿//@import "shared.component.scss";
+@import "_theme.components.scss";
+.email-input {
+    @extend %theme-text-input;
+}

@@ -1,0 +1,8 @@
+@import "_theme.components.scss";
+
+.text-input {
+    @extend %theme-text-input;
+    input[type=text] {
+        width: 100%;
+    }
+}

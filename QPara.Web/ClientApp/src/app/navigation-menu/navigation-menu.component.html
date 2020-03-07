@@ -1,0 +1,44 @@
+<div *ngIf="isAuthenticated" class='main-nav'>
+  <div class='navigation-panel'>
+    <div>
+      <ul class='navigation-list'>
+        <li [routerLinkActive]="['link-active']">
+          <a [routerLink]="['/home']">
+            <span class='glyphicon glyphicon-user'></span> All Members
+          </a>
+        </li>
+        <li *ngIf="userType() === UserType.Administrator" [routerLinkActive]="['link-active']">
+          <a (click)="onCreateNewMember()">
+            <span class='glyphicon glyphicon-user'></span> Create New Member
+          </a>
+        </li>
+        <li [routerLinkActive]="['link-active']">
+          <a [routerLink]="['/history']">
+            <span class='glyphicon glyphicon-user'></span>Change History
+          </a>
+        </li>
+        <li [routerLinkActive]="['link-active']">
+          <a [routerLink]="['/dashboard']">
+            <span class='glyphicon glyphicon-user'></span> Downloads
+          </a>
+        </li>
+        <li *ngIf="userType() === UserType.Administrator" [routerLinkActive]="['link-active']">
+          <a [routerLink]="['/documents']">
+            <span class='glyphicon glyphicon-user'></span> Documents
+          </a>
+        </li>
+        <li *ngIf="userType() === UserType.Administrator" [routerLinkActive]="['link-active']">
+          <a [routerLink]="['/stats']">
+            <span class='glyphicon glyphicon-user'></span> Statistics
+          </a>
+        </li>
+        <li>
+          <a  (click)="onLogout()">
+            <span class='glyphicon glyphicon-user'></span> Log out
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <qp-edit-member></qp-edit-member>
+</div>

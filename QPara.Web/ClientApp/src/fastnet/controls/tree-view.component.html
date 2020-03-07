@@ -1,0 +1,14 @@
+﻿<ul class="tree-view" *ngIf="hasNodes()" [ngClass]="{'level-0': level === 0}">
+    <li  *ngFor="let node of nodes">
+        <div >
+            <div class="tree-node" >
+                <span *ngIf="hasChildren(node); else blank" class="tree-icon" [ngClass]="getIconClass(node)" (click)="onNodeIconClick(node)"></span>
+                <ng-template #blank>
+                    <span [ngClass]="getIconClass(node)" ></span>
+                </ng-template>
+                <span class="item-text" [ngClass]="{selected: node.selected}" (click)="onNodeClick(node)" [innerHTML]="node.htmlText"></span>
+            </div>
+            <tree-view *ngIf="showChildren(node)" [emptynodeclass]="emptynodeclass" [expandedclass]="expandedclass" [closedclass]="closedclass" [parent]="instance" [nodes]="node.nodes" [level]="level + 1"></tree-view>
+        </div>
+    </li>
+</ul>
