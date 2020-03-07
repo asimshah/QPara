@@ -245,7 +245,8 @@ export class DateInputControl extends InputControlBase implements OnInit, AfterV
         let maxY = this.maxDate.getFullYear();
         this.buildYearRange(minY, maxY);
         this.buildCalendar();
-        this.isInitialised = true;
+      this.isInitialised = true;
+      this.showCalendar = false;
     }
     private buildCalendar() {
         //console.log(`min date ${this.minDate}, max date ${this.maxDate}`);
