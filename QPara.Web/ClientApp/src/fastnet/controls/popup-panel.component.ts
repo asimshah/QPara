@@ -1,5 +1,5 @@
 
-import { Component, OnInit, HostBinding, HostListener, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, HostBinding, HostListener, Input, ElementRef, AfterViewInit } from '@angular/core';
 
 @Component({
     selector: 'popup-panel',
@@ -9,9 +9,11 @@ import { Component, OnInit, HostBinding, HostListener, Input, ElementRef } from 
 export class PopupPanelComponent implements OnInit {
     @HostBinding("style.top") y = "0px";
     @HostBinding("style.left") x = "0px";
+    @HostBinding("style.right") r = "10px";
+    @HostBinding("style.width") boundWidth;
     @HostBinding("style.visibility") visibility = "hidden";
-    //@Input() @HostBinding("style.width") width = "200px";
     @Input() @HostBinding("style.width") width = "auto";
+
 
     constructor(public elem: ElementRef) { }
 
@@ -29,10 +31,9 @@ export class PopupPanelComponent implements OnInit {
         this.y = `${e.pageY}px`;
 
         this.visibility = "visible";
-        //console.log(`popuppanel @ (${this.x}, ${this.y})`);
         e.stopPropagation();
     }
-
+    
     close() {
         this.visibility = "hidden";
     }

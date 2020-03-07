@@ -244,7 +244,7 @@ $theme-gutter-fine: $theme-gutter-narrow / 2;
     display: grid;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: auto;
-    /*/deep/*/ [dialogcommands] {
+    ::ng-deep /*/deep/*/ [dialogcommands] {
       @extend %command-grid;
       padding-left: $theme-gutter-narrow;
       padding-right: $theme-gutter-narrow;

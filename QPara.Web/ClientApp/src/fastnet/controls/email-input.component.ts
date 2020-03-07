@@ -30,8 +30,8 @@ import { isNullorUndefined, isWhitespaceOrEmpty } from "../core/common.functions
     ]
 })
 export class EmailInputControl extends InputControlBase {
-  //private defaultEmailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  private defaultEmailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/; // this one allows longer tlds
+   //private defaultEmailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+   private defaultEmailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;// this one allows longer tlds
     @Output() change = new EventEmitter();
     constructor() {
         super();
