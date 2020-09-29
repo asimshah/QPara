@@ -92,101 +92,102 @@ $theme-gutter-fine: $theme-gutter-narrow / 2;
 }
 
 @mixin theme-buttons($font-size: 16px) {
-   button {
-      cursor: pointer;
+  button {
+    cursor: pointer;
 
-      &.icon {
-         $size: 1.75em;
-         /*height: $size;
+    &.icon {
+      $size: 1.75em;
+      /*height: $size;
          width: $size;*/
-         border: none;
-         border-radius: 0.25em;
-         /*font-size: 1.5em;*/
-         display: grid;
-         justify-content: center;
-         align-items: unset;
-         padding: 0.25em;
-         margin: 0.25em;
-         background-color: transparent;
-         color: theme-colour('primary');
+      border: none;
+      border-radius: 0.25em;
+      /*font-size: 1.5em;*/
+      display: grid;
+      justify-content: center;
+      align-items: unset;
+      padding: 0.25em;
+      margin: 0.25em;
+      background-color: transparent;
+      color: theme-colour('primary');
 
-         &:hover {
-            color: theme-colour('accent');
-         }
+      &:hover {
+        color: theme-colour('accent');
+      }
 
-         .fa {
-            margin: auto;
-            font-size: $font-size;
-         }
-         /*span.fa {
+      .fa {
+        margin: auto;
+        font-size: $font-size;
+      }
+      /*span.fa {
             font-size: $font-size;
         }*/
-         &:focus {
-            outline: none;
-         }
-
-         &.danger {
-            color: theme-colour('error');
-
-            &:hover {
-               color: theme-colour('accent');
-            }
-         }
+      &:focus {
+        outline: none;
       }
 
-      &:not(.icon) /*, a.button*/ {
-         font-family: inherit;
-         font-size: $font-size;
-         line-height: $font-size;
-         border-radius: 0.25em;
-         margin: 0.125em;
-         padding-left: 0.5em;
-         padding-right: 0.5em;
-         padding-top: 0.25em;
-         padding-bottom: 0.45em;
-         min-width: 72px;
-         max-height: 2.2em;
-         white-space: nowrap;
-         @include x-set-button-colours('primary');
+      &.danger {
+        color: theme-colour('error');
 
-
-         &.small {
-            font-size: $font-size / 1.6; //10px;
-            padding: 0.3em;
-         }
-
-
-         &.secondary {
-            @include x-set-button-colours('secondary');
-         }
-
-         &.danger {
-            @include x-set-button-colours('danger');
-         }
-
-         &.cancel {
-            @include x-set-button-colours('cancel');
-         }
-
-         &.link {
-            background: none;
-            border: none;
-            color: theme-colour('primary');
-            text-align: left;
-
-            &:hover {
-               text-decoration: underline;
-            }
-         }
+        &:hover {
+          color: theme-colour('accent');
+        }
       }
-   }
+    }
 
-   button[disabled], button.disabled, button.icon[disabled], button.icon.disabled {
-      cursor: none;
-      pointer-events: none;
-      color: theme-colour('disabled');
-   }
-   /*a.button {
+    &:not(.icon) /*, a.button*/ {
+      font-family: inherit;
+      font-size: $font-size;
+      line-height: $font-size;
+      border-radius: 0.25em;
+      margin: 0.125em;
+      padding-left: 0.5em;
+      padding-right: 0.5em;
+      padding-top: 0.25em;
+      padding-bottom: 0.45em;
+      min-width: 72px;
+      max-height: 2.2em;
+      white-space: nowrap;
+      @include x-set-button-colours('primary');
+
+
+      &.small {
+        font-size: $font-size / 1.6; //10px;
+        padding: 0.3em;
+      }
+
+
+      &.secondary {
+        @include x-set-button-colours('secondary');
+      }
+
+      &.danger {
+        @include x-set-button-colours('danger');
+      }
+
+      &.cancel {
+        @include x-set-button-colours('cancel');
+      }
+
+      &.link {
+        background: none;
+        border: none;
+        color: theme-colour('primary');
+        text-align: left;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  button[disabled], button.disabled, button.icon[disabled], button.icon.disabled {
+    cursor: none;
+    pointer-events: none;
+    background-color: theme-colour('disabled');
+    border-color: theme-colour('disabled');
+  }
+  /*a.button {
         text-decoration: none;
     }*/
 }

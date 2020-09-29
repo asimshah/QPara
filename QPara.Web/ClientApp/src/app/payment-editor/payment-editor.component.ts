@@ -67,7 +67,7 @@ export class PaymentEditorComponent implements OnInit, AfterViewInit {
     this.originalJson = JSON.stringify(this.payment);
     this.addvalidators();
     this.subscriptionYearList = await this.memberService.getSubscriptionYearList();
-    this.popup.width = 700;
+    this.popup.width = "700";
     this.popup.open((r: PaymentEditorResult) => {
       this.payment.subscriptionYearItem = undefined; // so this does not create "pending changes"
       onClose(r);

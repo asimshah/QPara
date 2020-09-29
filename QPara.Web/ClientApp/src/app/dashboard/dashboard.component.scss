@@ -1,6 +1,60 @@
 @import "../../fastnet/themes/_themes.scss";
 @include theme-buttons();
 
+a.button {
+  $font-size: 16px;
+  font-family: inherit;
+  font-size: $font-size;
+  line-height: $font-size;
+  cursor: pointer;
+  border-radius: 0.25em;
+  margin: 0.125em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  padding-top: 0.25em;
+  padding-bottom: 0.45em;
+  min-width: 72px;
+  max-height: 2.2em;
+  white-space: nowrap;
+  text-decoration: none;
+  @include x-set-button-colours('primary');
+
+
+  &.small {
+    font-size: $font-size / 1.6; //10px;
+    padding: 0.3em;
+  }
+
+
+  &.secondary {
+    @include x-set-button-colours('secondary');
+  }
+
+  &.danger {
+    @include x-set-button-colours('danger');
+  }
+
+  &.cancel {
+    @include x-set-button-colours('cancel');
+  }
+
+  &.link {
+    background: none;
+    border: none;
+    color: theme-colour('primary');
+    text-align: left;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &[disabled], &.disabled {
+    cursor: none;
+    pointer-events: none;
+    @include x-set-button-colours('disabled');
+  }
+}
 .dashboard {
   margin: 1em;
 
