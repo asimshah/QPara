@@ -13,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -28,9 +30,17 @@ namespace QPara.Web
             Configuration = configuration;
             this.log = logger;
             this.environment = env;
-            var version = typeof(Startup).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-            //version = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion;
-            log.Information($"QPara Membership {version.ToString()} site started");
+            var name = Process.GetCurrentProcess().ProcessName;
+            var siteVersion = GetSiteVersion();
+            var versions = System.Reflection.Assembly.GetExecutingAssembly().GetVersions();
+            log.Information($"Music {siteVersion} site started ({name}), using versions:");
+            foreach (var item in versions.OrderByDescending(x => x.DateTime))
+            {
+                log.Information($"{item.Name}, {item.DateTime.ToDefaultWithTime()}, [{item.Version}, {item.PackageVersion}]");
+            }
+            //var version = typeof(Startup).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+            ////version = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion;
+            //log.Information($"QPara Membership {version.ToString()} site started");
         }
 
         public IConfiguration Configuration { get; }
@@ -159,6 +169,11 @@ namespace QPara.Web
                     log.Error(xe, $"Error initialising QParaDb");
                 }
             }
+        }
+        private string GetSiteVersion()
+        {
+            var assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            return System.Diagnostics.FileVersionInfo.GetVersionInfo(assemblyLocation).ProductVersion;
         }
     }
 }

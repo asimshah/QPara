@@ -9,7 +9,8 @@
         </div>
         <div class="filter-setting" *ngIf="cd.name === ColumnNames.ZoneNumber">
           <bool-input label="{{ColumnNames[cd.name]}}" name="zoneNumber" [(ngModel)]="cd.filter.enabled"></bool-input>
-          <dropdown-input name="zones" [disabled]="!cd.filter.enabled" [(ngModel)]="cd.filter.matchAgainst" [items]="zoneList"></dropdown-input>
+          <!--<dropdown-input name="zones" [disabled]="!cd.filter.enabled" [(ngModel)]="cd.filter.matchAgainst" [items]="zoneList"></dropdown-input>-->
+          <combo-box dropdownonly [maxrows]="20" name="zones" [disabled]="!cd.filter.enabled" [(ngModel)]="cd.filter.matchAgainst" [items]="zoneList"></combo-box>
         </div>
         <div class="filter-setting" *ngIf="cd.name === ColumnNames.PaymentMethod">
           <bool-input label="{{ColumnNames[cd.name]}}" name="paymentMethod" [(ngModel)]="cd.filter.enabled"></bool-input>

@@ -32,7 +32,11 @@
             </div>
             <multiline-input label="Address" name="address" [(ngModel)]="member.address" rows="3" [validator]="validators.item('address')"></multiline-input>
             <text-input label="Post Code" name="postCode" [(ngModel)]="member.postCode" [validator]="validators.item('postCode')"></text-input>
-            <dropdown-input *ngIf="user.type === UserType.Administrator" label="Zone" name="zones" [(ngModel)]="member.zoneItem" [items]="zoneList"></dropdown-input>
+            <!--<dropdown-input *ngIf="user.type === UserType.Administrator" label="Zone" name="zones" [(ngModel)]="member.zoneItem" [items]="zoneList"></dropdown-input>-->
+            <!--<combo-box [log]="mebox" dropdownonly [maxrows]="10" *ngIf="user.type === UserType.Administrator" label="Zone" name="zones" [(ngModel)]="member.zoneItem" [items]="zoneList"></combo-box>-->
+            <!--<dropdown-list [log]="asim" [items]="zoneList"[(ngModel)]="member.zoneItem" ></dropdown-list>-->
+            <!--<list-view [log]="true" displayProperty="code" [dropmode]="true" [items]="listItems" (selectedItemChanged)="onlistItem($event)"></list-view>-->
+            <combo-box *ngIf="user.type === UserType.Administrator" label="Zone" [maxrows]="10"  [items]="zoneList" [(ngModel)]="member.zoneItem"></combo-box>
           </div>
           <div *ngIf="selectedTab.id === tabIds.subscription">
             <div class="subscription-tab">

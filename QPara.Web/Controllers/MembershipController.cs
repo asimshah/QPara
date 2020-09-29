@@ -144,7 +144,7 @@ namespace QPara.Web.Controllers
             {
                 await Task.Delay(0);
 
-                using (new TimedAction((t) => log.Debug($"post members v2 completed in {t.ToString("c")}")))
+                using (new TimedAction((t) => log.Information($"post members v2 completed in {t.ToString("c")}")))
                 {
                     db.ChangeTracker.AutoDetectChangesEnabled = false;
                     var members = GetMemberListAsDTO(columnData);
@@ -173,7 +173,7 @@ namespace QPara.Web.Controllers
                 .Replace(" ", "-")
                 .Replace(":", "-");
             var filename = $"Street Rep List-{nowString}.xlsx";
-            var title = $"QPARA STREET REPRESENTATIVES - {nowString}";
+            var title = $"QPARA STREET REPRESENTATIVES as at {now.ToDefaultWithTime()}";
             var sheet = reps.CreateStreetRepSheetToMemoryStream("QPara Street Reps", new string[] { title });
             sheet.Seek(0, SeekOrigin.Begin);
             return File(sheet, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
@@ -224,7 +224,7 @@ namespace QPara.Web.Controllers
                 //    .Replace(":", "-");
                 //var filename = $"Zone-{zn}-{listNameForFile}-{nowString}.xlsx";
                 var filename = TimestampFilename( $"Zone-{zn}-{listNameForFile}.xlsx");
-                var title = $"Zone {zone.Number}, {zone.Description} - {stdList.ToDescription()}";
+                var title = $"Zone {zone.Number}, {zone.Description} - {stdList.ToDescription()} as at {DateTime.Now.ToDefaultWithTime()}";
                 var subtitle = $"{zone.StreetRepDescription}";
                 IEnumerable<Member> members = GetMemberList(columns);
                 members = members.OrderByStreetAddress();
@@ -522,29 +522,30 @@ namespace QPara.Web.Controllers
             return SuccessResult(changes.Select(x => x.ToDTO()));
         }
         //
-        private IQueryable<MemberDTO> GetMemberListAsDTO(IEnumerable<ColumnMetadata> filters)
+        private IEnumerable<MemberDTO> GetMemberListAsDTO(IEnumerable<ColumnMetadata> filters)
         {
 
-            traceFilters(filters);
+            //traceFilters(filters);
             var members = GetMemberList(filters)
                 .Select(m => m.ToDTO(this.options, false, false, false));
             return members;
         }
-        private IQueryable<Member> GetMemberList(IEnumerable<ColumnMetadata> filters)
+        private IEnumerable<Member> GetMemberList(IEnumerable<ColumnMetadata> filters)
         {
-            traceFilters(filters);
+            //traceFilters(filters);
             var userProfile = User.GetProfile();
-            var members = db.Members
+            IEnumerable<Member> members = db.Members
                 .Include(x => x.Payments)
                 .Include(x => x.Zone)
                 .OrderBy(m => m.LastName)
                 .ThenBy(m => m.FirstName)
-                .ToArray().AsQueryable();
+                //.ToArray().AsQueryable()
+                ;
             if (userProfile.Type == UserType.StreetRepresentative)
             {
                 members = members.Where(x => x.Zone.Number == userProfile.ZoneNumber);
             }
-            members = members
+            members = members.AsEnumerable()
                 .Where(m => m.Filter(options, filters));
             return members;
         }

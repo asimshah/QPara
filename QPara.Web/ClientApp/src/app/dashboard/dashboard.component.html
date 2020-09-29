@@ -1,5 +1,6 @@
 <div *ngIf="isReady" class="dashboard">
-  <dropdown-input *ngIf="user.type !== UserType.StreetRepresentative" label="Choose a zone:" name="zones" [(ngModel)]="zone" [items]="zoneList" (selectionChanged)="onSelectionChanged($event)"></dropdown-input>
+  <!--<dropdown-input *ngIf="user.type !== UserType.StreetRepresentative" label="Choose a zone:" name="zones" [(ngModel)]="zone" [items]="zoneList" (selectionChanged)="onSelectionChanged($event)"></dropdown-input>-->
+  <combo-box dropdownonly [maxrows]="20" *ngIf="user.type !== UserType.StreetRepresentative" label="Choose a zone:" name="zones" [(ngModel)]="zone" [items]="zoneList" (selectionChanged)="onSelectionChanged($event)"></combo-box>
   <div class="dashboard-table">
     <div class="section-header">Download Excel Spreadsheet:</div>
     <div class="section-items">

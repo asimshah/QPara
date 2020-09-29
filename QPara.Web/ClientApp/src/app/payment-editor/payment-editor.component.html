@@ -2,7 +2,8 @@
   <div dialogbody>
     <ng-container *ngIf="payment">
       <div class="payment-form">
-        <dropdown-input label="QPara Year" name="qparaYear" [(ngModel)]="payment.subscriptionYearItem" [items]="subscriptionYearList"></dropdown-input>
+        <!--<dropdown-list label="QPara Year" name="qparaYear" [(ngModel)]="payment.subscriptionYearItem" [items]="subscriptionYearList"></dropdown-list>-->
+        <combo-box label="QPara Year" name="qparaYear"  [(ngModel)]="payment.subscriptionYearItem" [items]="subscriptionYearList"></combo-box>
         <div>
           <div class="recd-on-input">
             <date-input label="Received On" name="recdOn" [(ngModel)]="payment.receivedDate" [validator]="validators.item('recdOn')"></date-input>

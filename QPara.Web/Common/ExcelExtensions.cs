@@ -86,6 +86,7 @@ namespace Fastnet.QPara
             int sr = 1, sc = 1;
             int r = 0;
             int c = 0;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(stream))
             {
                 var qparaPink = Color.FromArgb(255, 127, 10, 73);
@@ -188,6 +189,7 @@ namespace Fastnet.QPara
             int r = 0;
             int c = 0;
             //MemoryStream ms = new MemoryStream();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(stream))
             {
                 var qparaPink = Color.FromArgb(255, 127, 10, 73);
