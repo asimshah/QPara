@@ -1,0 +1,37 @@
+@import "_theme.components";
+$list-background-colour:  theme-colour('background');
+
+:host {
+  display: block;
+}
+
+.list {
+  background-color: $list-background-colour;
+  border: 1px solid theme-colour('surface', 'light');
+  border-radius: 0.25em;
+  padding: $theme-gutter-narrow;
+  overflow-y: auto;
+  z-index: 100;
+
+  &.drop-mode {
+    position: absolute;
+    margin-top: -1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .list-item {
+    padding-left: $theme-gutter-narrow;
+    padding-right: $theme-gutter-narrow;
+
+    &.selected {
+      background-color: theme-colour('primary');
+      color: theme-colour('background');
+    }
+
+    &:hover {
+      background-color: theme-colour('surface');
+      color: theme-colour('background');
+    }
+  }
+}

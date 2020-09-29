@@ -1,7 +1,8 @@
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
-import { forwardRef, Component, Input, EventEmitter, Output } from "@angular/core";
+import { forwardRef, Component, Input, EventEmitter, Output, ElementRef } from "@angular/core";
 import {  ValidationResult, ValidationContext } from "./controls.types";
-import { ControlBase, InputControlBase } from "./controlbase.type";
+import { ControlBase } from "./controlbase.type";
+import { InputControlBase } from "./inputcontrolbase";
 import { isNullorUndefined, isWhitespaceOrEmpty } from "../core/common.functions";
 
 
@@ -33,8 +34,8 @@ export class EmailInputControl extends InputControlBase {
    //private defaultEmailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
    private defaultEmailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;// this one allows longer tlds
     @Output() change = new EventEmitter();
-    constructor() {
-        super();
+   constructor(elem: ElementRef) {
+        super(elem);
         this.setReference("email");
         this.setPrevalidator((ctx, val) => this.validateEmail(ctx, val));
     }

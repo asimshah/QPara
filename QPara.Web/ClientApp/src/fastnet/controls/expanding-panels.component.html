@@ -1,0 +1,9 @@
+<div class="layout" [ngStyle]="{'grid-template-columns': getColumnTemplate()}">
+   <div class="exp-panel-left">
+      <ng-container [ngTemplateOutlet]="leftPanelTemplate"></ng-container>
+   </div>
+   <div #slider class="pane-separator" (pointerup)="onSeparatorPointerUp($event)" (pointerdown)="onSeparatorPointerDown($event)"></div>
+   <div class="exp-panel-right">
+      <ng-container [ngTemplateOutlet]="rightPanelTemplate"></ng-container>
+   </div>
+</div>

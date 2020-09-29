@@ -1,0 +1,25 @@
+<div class="dropdown-list" [ngClass]="{ disabled: disabled}" (click)="stopEvent($event)">
+  <label *ngIf="label">
+    <span [innerHTML]="label"></span>
+  </label>
+  <div class="dropdown-container" [ngClass]="{'is-mobile': isMobileDevice(), 'is-open': isOpen() }">
+    <div #textBox class="text-box">
+      <div [(ngModel)]="value"></div>
+      <span class="fa fa-chevron-down down-icon" title="click to open" (click)="onDownIconClick()"></span>
+    </div>
+    <div *ngIf="isInError()" class="validation-text">
+      <span class="text-error">{{vr.message}}</span>
+    </div>
+    <div #droppanel *ngIf="showDropdown" class="dropdown-panel">
+      <div class="inner-panel">
+        <ng-container *ngIf="itemType === 'listitem'">
+          <div class="drop-item" *ngFor="let item of filteredItems" (click)="onItemClick($event, item)">{{item.name}}</div>
+        </ng-container>
+        <ng-container *ngIf="itemType === 'string'">
+          <div class="drop-item" *ngFor="let item of filteredItems" (click)="onItemClick($event, item)">{{item}}</div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+

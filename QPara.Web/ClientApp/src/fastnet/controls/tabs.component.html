@@ -1,0 +1,11 @@
+<div class="tabs-container">
+   <div class="tab-strip">
+      <div class="tab-header" *ngFor="let tab of tabs" (click)="onTabClick(tab)" [ngClass]="{'active': tab.active}" [ngStyle]="{'z-index': getTabZIndex(tab), 'margin-left': getLeftMargin(tab)}" >
+         <!--<a href="#">{{tab.title}}</a>-->
+         <div  >{{tab.title}}</div>
+      </div>
+   </div>
+   <div class="tab-body">
+      <ng-content></ng-content>
+   </div>
+</div>

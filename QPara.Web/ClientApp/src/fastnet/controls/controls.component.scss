@@ -157,7 +157,7 @@ enum-input, bool-enum-input {
     }
 }
 
-.dropdown-input {
+.dropdown-list {
     select {
         font: inherit;
         font-size: inherit;
@@ -174,7 +174,7 @@ enum-input, bool-enum-input {
 
 text-input, multiline-input, password-input,
     date-input, bool-input, enum-input, bool-enum-input,
-    number-input, dropdown-input {
+    number-input, dropdown-list {
     &.disabled {
         //@extend %set-disabled;
         @extend %theme-disabled;

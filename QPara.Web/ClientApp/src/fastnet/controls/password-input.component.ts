@@ -1,6 +1,7 @@
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
-import { Component, forwardRef, EventEmitter, Output } from "@angular/core";
-import { ControlBase, InputControlBase } from "./controlbase.type";
+import { Component, forwardRef, EventEmitter, Output, ElementRef } from "@angular/core";
+import { ControlBase } from "./controlbase.type";
+import { InputControlBase } from "./inputcontrolbase";
 
 @Component({
     selector: 'password-input',
@@ -28,8 +29,8 @@ import { ControlBase, InputControlBase } from "./controlbase.type";
 })
 export class PasswordInputControl extends InputControlBase {
     @Output() change = new EventEmitter();
-    constructor() {
-        super();
+   constructor(elem: ElementRef) {
+        super(elem);
         this.setReference("password");
     }
     onChange() {

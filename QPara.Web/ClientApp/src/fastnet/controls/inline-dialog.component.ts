@@ -1,6 +1,4 @@
-
-import { Component, ViewEncapsulation } from '@angular/core';
-
+import { Component, ViewEncapsulation, ElementRef } from '@angular/core';
 import { DialogBase } from './dialog-base.type';
 
 
@@ -11,7 +9,9 @@ import { DialogBase } from './dialog-base.type';
     encapsulation: ViewEncapsulation.None
 })
 export class InlineDialogComponent extends DialogBase  {
-
+   constructor(idc: ElementRef) {
+      super(idc);
+   }
 }
 
 

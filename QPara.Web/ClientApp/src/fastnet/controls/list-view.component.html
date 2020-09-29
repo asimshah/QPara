@@ -1,0 +1,30 @@
+<div class="list-view">
+   <div #headercontainer class="list-view-header" [ngStyle]="{'grid-template-columns': getGridTemplateColumns()}">
+      <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
+   </div>
+   <div #bodycontainer class="list-view-body">
+      <div [attr.draggable]="canDragRows()" class="list-view-item"
+           *ngFor="let item of items; let i = index; let even = even; let odd = odd; let first = first, let last = last"
+           (dragenter)="onDragEnter($event, i)" (dragleave)="onDragLeave($event, i)" (dragover)="onDragOver($event, i)"
+           (dragstart)="onDragStart($event, i)" (dragend)="onDragEnd($event, i)"
+
+           (click)="onListItemClick(item)"
+           [ngClass]="{'selected': selectedItem === item}" [ngStyle]="{'grid-template-columns': getGridTemplateColumns()}">
+         <div *ngIf="canDragRows()" draggable class="drop-location"
+              (dragenter)="onDragEnter($event, i)" (dragover)="onDragOver($event, i)"
+              (drop)="onDrop($event, i)" >
+            <i class="fa fa-angle-double-right"></i>
+            <div class="insertion-line"></div>
+            <i class="fa fa-angle-double-left"></i>
+         </div>
+         <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{$implicit: item, rowNumber: i + 1, firstRow: first, lastRow: last, oddRow: odd, evenRow: even}"></ng-container>
+         <div *ngIf="canDragRows() && last" draggable class="drop-location"
+              (dragenter)="onDragEnter($event, i)" (dragover)="onDragOver($event, i)"
+              (drop)="onDrop($event, i + 1)">
+            <i class="fa fa-angle-double-right"></i>
+            <div class="insertion-line"></div>
+            <i class="fa fa-angle-double-left"></i>
+         </div>
+      </div>
+   </div>
+</div>

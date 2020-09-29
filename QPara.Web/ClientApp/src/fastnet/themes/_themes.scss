@@ -92,96 +92,103 @@ $theme-gutter-fine: $theme-gutter-narrow / 2;
 }
 
 @mixin theme-buttons($font-size: 16px) {
-    button.icon {
-        height: 100%;
-        min-width: auto;
-        border: none;
-        border-radius: 0;
-        /*font-size: 1.5em;*/
-        display: flex;
-        justify-content: center;
-        padding-right: 0.25em;
-        padding-left: 0;
-        margin: $font-size / 3;
-        background-color: transparent;
-        color: theme-colour('primary');
+   button {
+      cursor: pointer;
 
-        &:hover {
+      &.icon {
+         $size: 1.75em;
+         /*height: $size;
+         width: $size;*/
+         border: none;
+         border-radius: 0.25em;
+         /*font-size: 1.5em;*/
+         display: grid;
+         justify-content: center;
+         align-items: unset;
+         padding: 0.25em;
+         margin: 0.25em;
+         background-color: transparent;
+         color: theme-colour('primary');
+
+         &:hover {
             color: theme-colour('accent');
-        }
+         }
 
-        span.fa {
+         .fa {
+            margin: auto;
             font-size: $font-size;
-        }
-
-        &:focus {
+         }
+         /*span.fa {
+            font-size: $font-size;
+        }*/
+         &:focus {
             outline: none;
-        }
+         }
 
-        &.danger {
+         &.danger {
             color: theme-colour('error');
 
             &:hover {
-                color: theme-colour('accent');
+               color: theme-colour('accent');
             }
-        }
-    }
+         }
+      }
 
-    button:not(.icon), a.button {
-        font-family: inherit;
-        font-size: $font-size;
-        line-height: $font-size;
-        cursor: pointer;
-        border-radius: 0.25em;
-        margin: 0.125em;
-        padding-left: 0.5em;
-        padding-right: 0.5em;
-        padding-top: 0.25em;
-        padding-bottom: 0.45em;
-        min-width: 72px;
-        max-height: 2.2em;
-        white-space: nowrap;
-        @include x-set-button-colours('primary');
+      &:not(.icon) /*, a.button*/ {
+         font-family: inherit;
+         font-size: $font-size;
+         line-height: $font-size;
+         border-radius: 0.25em;
+         margin: 0.125em;
+         padding-left: 0.5em;
+         padding-right: 0.5em;
+         padding-top: 0.25em;
+         padding-bottom: 0.45em;
+         min-width: 72px;
+         max-height: 2.2em;
+         white-space: nowrap;
+         @include x-set-button-colours('primary');
 
 
-        &.small {
+         &.small {
             font-size: $font-size / 1.6; //10px;
             padding: 0.3em;
-        }
+         }
 
 
-        &.secondary {
+         &.secondary {
             @include x-set-button-colours('secondary');
-        }
+         }
 
-        &.danger {
+         &.danger {
             @include x-set-button-colours('danger');
-        }
+         }
 
-        &.cancel {
+         &.cancel {
             @include x-set-button-colours('cancel');
-        }
+         }
 
-        &.link {
+         &.link {
             background: none;
             border: none;
             color: theme-colour('primary');
             text-align: left;
 
             &:hover {
-                text-decoration: underline;
+               text-decoration: underline;
             }
-        }
+         }
+      }
+   }
 
-        &[disabled], &.disabled {
-            cursor: none;
-            pointer-events: none;
-            @include x-set-button-colours('disabled');
-        }
-    }
-    a.button {
+   button[disabled], button.disabled, button.icon[disabled], button.icon.disabled {
+      cursor: none;
+      pointer-events: none;
+      color: theme-colour('disabled');
+   }
+   /*a.button {
         text-decoration: none;
-    }
+    }*/
 }
 
 

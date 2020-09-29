@@ -1,0 +1,56 @@
+@import "_theme.components.scss";
+
+/*ul {
+    padding-left: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    list-style: none;
+    border-bottom: 1px solid #ddd;
+    & > li {
+        position: relative;
+        display: block;
+        float: left;
+        margin-bottom: -1px;
+    }
+}*/
+.tabs-container {
+   background-color: theme-colour('background', 'dark');
+   padding: $theme-gutter;
+   display: grid;
+   grid-template-rows: auto 1fr;
+
+   .tab-strip {
+      display: flex;
+   }
+}
+
+$tab-borders: 2px solid theme-colour('primary', 'dark');
+
+.tab-header {
+   cursor: pointer;
+   border-left: $tab-borders;
+   border-right: $tab-borders;
+   border-top: $tab-borders;
+   border-radius: $theme-gutter $theme-gutter 0 0;
+   //position: relative;
+   padding: $theme-gutter / 2 $theme-gutter * 3;
+   background-color: darken(theme-colour('primary', 'dark'), 5%);
+
+   &.active {
+      background-color: theme-colour('primary', 'dark');
+   }
+
+   &:hover {
+      background-color: darken($high-accent-colour, 35%);
+   }
+}
+
+.tab-body {
+   border: $tab-borders;
+}
+
+.tab-close {
+   color: gray;
+   text-align: right;
+   cursor: pointer;
+}

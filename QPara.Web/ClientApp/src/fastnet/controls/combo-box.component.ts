@@ -1,204 +1,136 @@
 
-import { Component, AfterViewInit, ViewChild, ElementRef, Renderer2, Input, AfterViewChecked, HostListener, OnDestroy, forwardRef, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
-import { InputControlBase, ControlBase } from './controlbase.type';
+import { Component, AfterViewInit, ViewChild, ElementRef, Renderer2, Input, AfterViewChecked, HostListener, OnDestroy, forwardRef, OnChanges, SimpleChanges, EventEmitter, Output, ViewChildren, QueryList } from '@angular/core';
+import { ControlBase } from './controlbase.type';
+import { InputControlBase } from "./inputcontrolbase";
 
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ListItem } from '../core/core.types';
+import { TextInputControl } from './text-input.component';
+import { ListComponent } from './list.component';
 
+/** allows selection from a list of items using a list view in dropdown mode
+ */
 @Component({
-    selector: 'combo-box',
-    templateUrl: './combo-box.component.html',
-    styleUrls: ['./combo-box.component.scss'],
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => ComboBoxComponent),
-            multi: true
-        },
-        {
-            provide: ControlBase, useExisting: forwardRef(() => ComboBoxComponent)
-        }
-    ]
+  selector: 'combo-box',
+  templateUrl: './combo-box.component.html',
+  styleUrls: ['./combo-box.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ComboBoxComponent),
+      multi: true
+    },
+    {
+      provide: ControlBase, useExisting: forwardRef(() => ComboBoxComponent)
+    }
+  ]
 })
-export class ComboBoxComponent extends InputControlBase implements AfterViewInit, AfterViewChecked, OnDestroy {
-    private static allComboBoxes: ComboBoxComponent[] = [];
-    showDropdown: boolean = false;
-    @Input() maxRows: number = 5;
-    @Input() items: ListItem<any>[];
-    @Input() compact: boolean = false;
-    @Input() aligncentre: boolean = false;
-    @Output() selectionchanged = new EventEmitter<ListItem<any>>();
-    filteredItems: ListItem<any>[];
-    @ViewChild('textBox', { static: false }) textBox: ElementRef;
-    @ViewChild('droppanel', { static: false }) dropPanel: ElementRef;
-    inputElementText: string = '';
-    private padding: number = 3.5;
-    private rowHeight = 20;
-    private dropPanelWidth: number;
-    private dropPanelHeight: number;
-    private inputElementTextValid: boolean = false;
-    private userTyping = false;
-    constructor(private renderer: Renderer2) {
-        super();
-        this.setReference("combo-box");
-        ComboBoxComponent.allComboBoxes.push(this);
-        //console.log(`constructor: ComboBoxComponent.allComboBoxes length now ${ComboBoxComponent.allComboBoxes.length}`);
+export class ComboBoxComponent extends InputControlBase implements AfterViewInit,  OnDestroy {
+  private static allComboBoxes: ComboBoxComponent[] = [];
+  showListView: boolean = false;
+  @Input() smartFilter = false; // ** NB ** items must be string[] for smartfilter to work (but it might work with objects having toString()??)
+  @Input() items: any[] = []; 
+  @Input() maxrows: number = 5;
+  @Input() compact: boolean = false; // used by <date-input /> to reduce the down icon size
+  @Input() aligncentre: boolean = false;// used by <date-input /> to align the year number in the month display
+  @Output() selectionchanged = new EventEmitter<any>();
+  filteredItems: { name: string, index: number }[];
+  private prefix = "";
+  private guard = false;
+  constructor(elem: ElementRef, private renderer: Renderer2) {
+    super(elem);
+    this.setReference("combo-box");
+    ComboBoxComponent.allComboBoxes.push(this);
+  }
+
+  ngOnDestroy() {
+    let index = ComboBoxComponent.allComboBoxes.findIndex(x => x === this);
+    if (index >= 0) {
+      ComboBoxComponent.allComboBoxes.splice(index, 1);
     }
-    writeValue(obj: any): void {
-        super.writeValue(obj);
-        if (obj) {
-            this.inputElementText = obj.name;
+    //console.log(`ngOnDestroy(): ComboBoxComponent.allComboBoxes length now ${ComboBoxComponent.allComboBoxes.length}`);
+  }
+
+
+  ngAfterViewInit() {
+    this.filterItems();
+    this.closeListView();
+    super.ngAfterViewInit();
+  }
+
+  filterItems() {
+    this.filteredItems = [];
+    let i = 0;
+    for (let item of this.items) {
+      if ( this.smartFilter && this.prefix && this.prefix.length > 0) {
+        if (item.toString().toLowerCase().startsWith(this.prefix)) {
+          // <list-view> default displayProperty is 'name'
+          this.filteredItems.push({ 'name': item, index: i });
         }
+      } else {
+        // <list-view> default displayProperty is 'name' - item needs to have a toString() method for this to work!!
+        this.filteredItems.push({ 'name': item, index: i });
+      }
+      ++i;
     }
-    ngOnDestroy() {
-        let index = ComboBoxComponent.allComboBoxes.findIndex(x => x === this);
-        if (index >= 0) {
-            ComboBoxComponent.allComboBoxes.splice(index, 1);
-        }
-        //console.log(`ngOnDestroy(): ComboBoxComponent.allComboBoxes length now ${ComboBoxComponent.allComboBoxes.length}`);
+  }
+  onListIndexChanged(index: number) {
+    this.guard = true;
+    console.log(`combo-box changed: index ${index},item ${this.items[index]}`);
+    let fi = this.filteredItems[index];
+    this.writeValue(this.items[fi.index]);
+    setTimeout(() => {
+      this.closeListView();
+      this.guard = false;
+    }, 0);
+  }
+  onTextChange() {
+    //NB 1: this method is only called if the user has typed into the <text-box/>
+    // **NB 2 ** this method is bound to (ngModelChange). Binding it to (change) did not work properly (required second click on list item)
+    if (this.smartFilter) {
+      if (this.guard == false) {
+        this.openListView();
+        console.log(`onTextChange(): value is ${this.value}`);
+        this.prefix = (<string>this.value).toLowerCase();
+        this.filterItems();
+      }
     }
-    @HostListener('window:resize', ['$event.target'])
-    onResize() {
-        //console.log(`onResize()`);
-        this.computeDropPanelSize();
-        if (this.showDropdown === true) {
-            // it is about to open
-            this.setDropPanelSize();
-        }
-    }
-    ngAfterViewChecked() {
-        //console.log(`ngAfterViewChecked()`);
-        if (this.showDropdown === true) {
-            // it is about to open
-            this.setDropPanelSize();
-        }
+  }
+  onDownIconClick() {
+    if (this.showListView) {
+      this.closeListView();
+    } else {
+      this.openListView();
 
     }
 
-    ngAfterViewInit() {
-        //console.log(`ngAfterViewInit()`);
-        this.matchItems();
-        this.computeDropPanelSize();
-        super.ngAfterViewInit();
-    }
-    onItemClick(e: Event, item: ListItem<any>) {
-        //console.log(`onItemClick: ${JSON.stringify(item, null, 2)}`);
-        this.selectItem(item);
-    }
-    onLocalInput(text: string) {
-        //console.log(`onInput(): ${text}, inputElementText = ${this.inputElementText}`);
-        super.onInput();
-        this.userTyping = true;
-        this.matchItems(text);
-
-        if (this.showDropdown) {
-            this.computeDropPanelSize();
-            this.setDropPanelSize();
-        } else {
-            this.openDropdown(false);
+  }
+  isOpen(): boolean {
+    return this.showListView === true;
+  }
+  stopEvent(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+  @HostListener('document:click')
+  public externalEvent() {
+    //console.log(`externalEvent`);
+    this.closeListView();
+  }
+  private openListView(initialState = true) {
+    this.closeOthers();
+    this.showListView = true;
+  }
+  private closeListView() {
+    this.showListView = false;
+  }
+  private closeOthers() {
+    for (let control of ComboBoxComponent.allComboBoxes) {
+      if (control !== this) {
+        if (control.showListView === true) {
+          control.closeListView();
         }
-        this.inputElementTextValid = false;
-        if (this.filteredItems.length === 1) {
-            this.selectItem(this.filteredItems[0]);
-            this.inputElementTextValid = true;
-        }
-
+      }
     }
-    onDownIconClick() {
-        //console.log(`onDownIconClick()`);
-        //this.showDropdown = !this.showDropdown;
-        //if (this.showDropdown) {
-        //    this.closeOthers();
-        //}
-        if (this.showDropdown) {
-            this.closeDropDown();
-        } else {
-            this.openDropdown();
-
-        }
-
-    }
-    isOpen(): boolean {
-        return this.showDropdown === true;
-    }
-    stopEvent(e: Event) {
-        e.stopPropagation();
-        e.preventDefault();
-    }
-    @HostListener('document:click')
-    public externalEvent() {
-        //console.log(`externalEvent`);
-        this.closeDropDown();
-    }
-    private openDropdown(initialState = true) {
-        this.closeOthers();
-        this.showDropdown = true;
-        setTimeout(() => {
-            if (initialState === true) {
-                this.matchItems();
-            }
-            this.computeDropPanelSize();
-            this.setDropPanelSize();
-            let currentElement = this.findCurrentDropItem();
-            currentElement.scrollIntoView();
-        }, 0);
-    }
-    private closeDropDown() {
-        if (this.userTyping === true) {
-            this.selectItem(this.value);
-        }
-        setTimeout(() => {
-            this.showDropdown = false;
-        }, 0);
-
-    }
-    private closeOthers() {
-        for (let control of ComboBoxComponent.allComboBoxes) {
-            if (control !== this) {
-                if (control.showDropdown === true) {
-                    control.closeDropDown();
-                }
-            }
-        }
-    }
-    private selectItem(item: ListItem<any>) {
-        this.inputElementText = '';
-        setTimeout(() => {
-            this.inputElementText = item.name;
-            this.writeValue(item);
-            this.matchItems();
-            this.userTyping = false;
-            //console.log(`selectItem: ${JSON.stringify(item)}`);
-            this.selectionchanged.emit(item);
-            this.closeDropDown();
-        }, 0);
-
-    }
-    private matchItems(filter: string = '') {
-        this.filteredItems = this.items.filter(x => x.name.toLowerCase().startsWith(filter.toLowerCase()));
-    }
-    private computeDropPanelSize() {
-        this.dropPanelWidth = this.textBox.nativeElement.clientWidth;
-        let rows = Math.min(this.maxRows, this.filteredItems.length);
-        this.dropPanelHeight = (rows * this.rowHeight);// + (this.padding * 2);
-        //console.log(`panel size is now ${this.dropPanelWidth}w, ${this.dropPanelHeight}h`);
-    }
-    private setDropPanelSize() {
-        this.renderer.setStyle(this.dropPanel.nativeElement, 'width', `${this.dropPanelWidth}px`);
-        this.renderer.setStyle(this.dropPanel.nativeElement, 'height', `${this.dropPanelHeight}px`);
-        //console.log(`panel size reset`);
-    }
-    private findCurrentDropItem(): HTMLElement {
-        let currentText = this.value.name;
-        let items = this.dropPanel.nativeElement.querySelectorAll('.drop-item');
-        let r = null;
-        for (let item of items) {
-            let text = item.innerHTML;
-            if (currentText === text) {
-                r = item;
-                break;
-            }                
-        } 
-        return r!;
-    }
+  }
 }

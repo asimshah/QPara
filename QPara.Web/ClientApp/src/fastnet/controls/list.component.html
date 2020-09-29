@@ -1,0 +1,9 @@
+<div class="list" [ngClass]="{'drop-mode': dropmode}">
+  <div #itemcontainer class="item-container">
+    <ng-container *ngIf="items.length > 0">
+      <ng-container *ngFor="let item of items; let i = index">
+        <div  class="list-item" [ngClass]="{'selected' : isSelected(i)}" (click)="onItemClick(i)">{{getItemDescr(item)}}</div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

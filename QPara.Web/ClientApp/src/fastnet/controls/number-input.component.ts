@@ -3,7 +3,8 @@ import { NG_VALUE_ACCESSOR } from "@angular/forms";
 //import { ControlBase } from "./controls.component";
 //import { TextInputControl } from "./text-input.component";
 import { ValidationResult, ValidationContext } from "./controls.types";
-import { InputControlBase, ControlBase } from "./controlbase.type";
+import { ControlBase } from "./controlbase.type";
+import { InputControlBase } from "./inputcontrolbase";
 import { isNullorUndefined } from "../core/common.functions";
 
 
@@ -36,8 +37,8 @@ export class NumberInputControl extends InputControlBase {
     @Input() minNumber: number;
     @Input() maxNumber: number;
     @ViewChild('focushere', { static: false }) element: ElementRef;
-    constructor() {
-        super();
+   constructor(elem: ElementRef) {
+        super(elem);
         this.setReference("number");
         this.setPrevalidator((ctx, val) => this.validateNumberAsync(ctx, val));
     }

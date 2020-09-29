@@ -1,7 +1,8 @@
-﻿import { NG_VALUE_ACCESSOR } from "@angular/forms";
-import { forwardRef, Component, Input } from "@angular/core";
+import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { forwardRef, Component, Input, ElementRef } from "@angular/core";
 //import { TextInputControl } from "./text-input.component";
-import { InputControlBase, ControlBase } from "./controlbase.type";
+import { ControlBase } from "./controlbase.type";
+import { InputControlBase } from "./inputcontrolbase";
 
 export enum Resizability {
     HorizontalOnly,
@@ -37,8 +38,8 @@ export enum Resizability {
 export class MultilineTextInput extends InputControlBase {
     @Input() rows: number;
     @Input('resize') resizability: Resizability;
-    constructor() {
-        super();
+    constructor(elem: ElementRef) {
+        super(elem);
         this.setReference("multi-line");
     }
     getResizeClass(): string {

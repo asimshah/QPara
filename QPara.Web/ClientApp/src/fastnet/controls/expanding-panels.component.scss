@@ -1,0 +1,38 @@
+@import "../themes/_themes.scss";
+@include theme-buttons();
+:host {
+    height: 100%;
+    display: block;
+}
+.layout {
+    box-sizing: border-box;
+   height: 100%;
+   padding-top: $theme-gutter-narrow;
+   padding-bottom: $theme-gutter-narrow;
+   display: grid;
+   //align-content: stretch;
+   .exp-panel-left {
+      background-color: theme-colour('primary');
+      //min-height: 400px;
+   }
+
+   .pane-separator {
+      width: $theme-gutter-narrow;
+      background-color: darken(theme-colour('accent', 'dark'), 10%);
+
+      &:hover {
+         background-color: darken(theme-colour('accent', 'light'), 25%);
+         cursor: ew-resize;
+      }
+   }
+
+   .exp-panel-right {
+      background-color: darken(theme-colour('primary', 'dark'), 5%);
+   }
+
+   .exp-panel-left, .exp-panel-right {
+      overflow: hidden;
+      height: 100%;
+      //margin-bottom: $theme-gutter-narrow;
+   }
+}

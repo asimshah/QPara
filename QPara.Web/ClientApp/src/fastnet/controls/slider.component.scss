@@ -1,0 +1,49 @@
+@import "_theme.components.scss";
+
+:host {
+    display: block;
+}
+.container {
+   margin-left: $theme-gutter-narrow;
+   margin-right: $theme-gutter-narrow;
+   font-size: 12px;
+   display: grid;
+   grid-column-gap: $theme-gutter;
+   grid-template-columns: 1fr;
+   align-items: center;
+
+   > div {
+      grid-row-start: 1;
+      grid-column-start: 1;
+   }
+
+   .groove {
+
+      height: 2px;
+      border-radius: 2px;
+      background-color: theme-colour('surface');
+
+      &.highlight {
+         background-color: theme-colour('accent');
+      }
+   }
+
+   .bead {
+      position: relative;
+      width: fit-content;
+
+      &.repositioning-disabled {
+         pointer-events: none;
+      }
+
+      &:hover:not(.repositioning-disabled) {
+         color: theme-colour('accent');
+      }
+   }
+
+   &.is-mobile {
+      .bead {
+         font-size: 3em;
+      }
+   }
+}

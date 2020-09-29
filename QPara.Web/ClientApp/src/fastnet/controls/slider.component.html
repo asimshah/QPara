@@ -1,0 +1,4 @@
+<div class="container" [ngClass]="{'is-mobile' : isMobileDevice()}">
+   <div #groove class="groove" [ngClass]="{'highlight': isDragging === true}"></div>
+   <div #bead class="bead fa fa-circle" [ngStyle]="{left: beadPosition}" [ngClass]="{'repositioning-disabled': canslide === false}" (pointerdown)="onBeadPointerDown($event)" (pointerup)="onBeadPointerUp($event)"></div>
+</div>

@@ -1,7 +1,11 @@
 @import "_theme.components";
 
 :host {
-    @extend %theme-enum-input;
-
+   @extend %theme-enum-input;
 }
 
+.is-mobile {
+   .enum-group {
+      grid-row-gap: $theme-gutter;
+   }
+}

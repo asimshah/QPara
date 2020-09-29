@@ -1,6 +1,7 @@
-import { Component, forwardRef, Output, EventEmitter } from "@angular/core";
+import { Component, forwardRef, Output, EventEmitter, ElementRef } from "@angular/core";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
-import { InputControlBase, ControlBase } from "./controlbase.type";
+import { ControlBase } from "./controlbase.type";
+import { InputControlBase } from "./inputcontrolbase";
 
 @Component({
     selector: 'search-input',
@@ -22,8 +23,8 @@ export class SearchInputControl extends InputControlBase {
     @Output() searchClick = new EventEmitter();
     @Output() clearClick = new EventEmitter();
     //public controlId: string = `sic_${++SearchInputControl.controlCount}`;
-    constructor() {
-        super();
+   constructor(elem: ElementRef) {
+        super(elem);
         this.setReference("search");
     }
     clearSearchText() {

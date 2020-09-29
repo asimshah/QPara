@@ -1,67 +1,64 @@
 @import "_theme.components";
 
-/*$popup-overlay-background-colour: rgba(white, 0.77);
-$popup-background-colour: white;
-$popup-colour: black;
-$popup-border-colour: cornflowerblue;
-$popup-border: 1px solid $popup-border-colour;
-$popup-padding: 0.25em;
-$popup-border-radius: 0.25em;
-
-$popup-caption-colour: cornflowerblue;
-$popup-warning-caption-colour: darkorange;
-$popup-error-caption-colour: red;*/
-
 
 .popup-dialog {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(theme-colour('primary', 'light'), 0.60);
+   position: fixed;
+   top: 0;
+   right: 0;
+   bottom: 0;
+   left: 0;
+   background-color: rgba(theme-colour('primary', 'light'), 0.60);
 
-    .popup-window {
-        border-radius: 0.25em;
-        max-width: 90%;
-        margin: auto;
-        margin-top: 80px;// 5%;
-        padding: $theme-gutter-narrow;
-        box-shadow: 5px 5px 8px theme-colour('shadow', 'light');
-        border: 3px solid theme-dialog-colour('chromeborder');
-        background-color: theme-dialog-colour('background');
-        color: theme-colour('surface');
+   .popup-window {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      border-radius: 0.25em;
+      max-width: 90%;
+      margin: auto;
+      margin-top: 80px; // 5%;
+      padding: $theme-gutter-narrow;
+      box-shadow: 5px 5px 8px theme-colour('shadow', 'light');
+      border: 3px solid theme-dialog-colour('chromeborder');
+      background-color: theme-dialog-colour('background');
+      color: theme-colour('surface');
 
-        .window-caption {
-            &.hide {
-                display: none;
-            }
-            font-weight: bold;
-            background-color: theme-dialog-colour('captionbackground');
-            color: theme-dialog-colour('background');
-            padding: $theme-gutter-narrow;
-            min-height: 2em;
-            border-top-left-radius: 0.25em;
-            border-top-right-radius: 0.25em;
-            display: grid;
-            align-items: center;
+      .window-caption {
+         &.hide {
+            display: none;
+         }
 
-            &.warning {
-                background-color: theme-colour('warning');
-            }
+         font-weight: bold;
+         background-color: theme-dialog-colour('captionbackground');
+         color: theme-dialog-colour('background');
+         padding: $theme-gutter-narrow;
+         min-height: 2em;
+         border-top-left-radius: 0.25em;
+         border-top-right-radius: 0.25em;
+         display: grid;
+         align-items: center;
 
-            &.error {
-                background-color: theme-colour('error');
-            }
-        }
+         &.warning {
+            background-color: theme-colour('warning');
+         }
 
-        @include theme-dialog-commands;
+         &.error {
+            background-color: theme-colour('error');
+         }
+      }
+      .dialog-body {
+          height: 100%;
+          * > {
+              height: 100%;
+          }
+      }
+      @include theme-dialog-commands;
 
-        .dialog-commands {
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            border-bottom-left-radius: 0.25em;
-            border-bottom-right-radius: 0.25em;
-        }
-    }
+      .dialog-commands {
+         background-color: theme-colour('background');
+         border-top-left-radius: 0;
+         border-top-right-radius: 0;
+         border-bottom-left-radius: 0.25em;
+         border-bottom-right-radius: 0.25em;
+      }
+   }
 }

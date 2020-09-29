@@ -1,0 +1,16 @@
+<div class="text-input" [ngClass]="{'not-valid': isInError(), 'disabled' : disabled}">
+   <label *ngIf="label" [for]="controlId">
+      <span [innerHTML]="label"></span>
+      <span *ngIf="traceReferences" class="trace-text">{{getReference()}}</span>
+   </label>
+   <!-- **BEWARE** setfocus() on an input element causes the readonly attribute to disappear!! -->
+   <ng-container *ngIf="!readonly">
+      <input [id]="controlId" #focushere type="text" autocomplete="off" [placeholder]=placeHolderText [(ngModel)]="value" [ngStyle]="getStyle()" (blur)="onBlur()" (input)="onChange()" />
+   </ng-container>
+   <ng-container *ngIf="readonly">
+      <input [id]="controlId" readonly type="text" autocomplete="off" [placeholder]=placeHolderText [(ngModel)]="value" [ngStyle]="getStyle()" (blur)="onBlur()" (input)="onChange()" />
+   </ng-container>
+   <div *ngIf="isInError()" class="validation-text">
+      <span class="text-error">{{vr.message}}</span>
+   </div>
+</div>

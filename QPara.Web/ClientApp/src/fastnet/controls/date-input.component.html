@@ -20,7 +20,7 @@
                     <span *ngIf="!first" class="fa fa-square blank-icon"></span>
                     <div class="month-year">
                         <span>{{cm.name}}</span>
-                        <combo-box [compact]="true" [aligncentre]="true" [maxRows]="5" [(ngModel)]="cm.year" [items]="yearRange" (selectionchanged)="onYearChange($event, cm, i)"></combo-box>
+                        <combo-box [compact]="true" [aligncentre]="true" [maxrows]="5" [(ngModel)]="cm.year" [items]="yearRange" (selectionchanged)="onYearChange($event, cm, i)"></combo-box>
                     </div>
                     <span *ngIf="!last" class="fa fa-square blank-icon"></span>
                     <span *ngIf="last" class="fa fa-arrow-circle-right forward-icon" (click)="onForwardOneMonth()" (mouseup)="stopEvent($event)"></span>

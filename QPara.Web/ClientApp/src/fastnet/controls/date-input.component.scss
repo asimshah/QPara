@@ -163,8 +163,10 @@ span.label {
 
           .day-header {
             @extend .column-padding;
+            padding-right: 0;
             font-weight: normal;
             font-size: smaller;
+            text-align: right;
           }
 
           .calendar-day {

@@ -1,0 +1,10 @@
+@import "_theme.components.scss";
+
+.tooltip {
+    position: absolute;
+    background-color: theme-colour('background');
+    border: 1px solid theme-colour('primary');
+    border-radius: 2px;
+    padding: $theme-gutter-narrow;
+    transition-property: top;
+}
