@@ -343,3 +343,19 @@ export class DocumentInfo {
     name: string;
     description: string;
 }
+export class MailchimpContact {
+    emailAddress: string;
+    unsubscribeReason: string;
+}
+export class MailchimpInformation {
+    updatesEnabled: boolean;
+    subscribed: MailchimpContact[];
+    unsubscribed: MailchimpContact[];
+    archived: MailchimpContact[];
+    cleaned: MailchimpContact[];
+    membersReceivingEmail: string[];
+    membersDecliningEmail: string[];
+    membersThatHaveLeft: string[];
+    suspendedMembers: string[];
+
+}

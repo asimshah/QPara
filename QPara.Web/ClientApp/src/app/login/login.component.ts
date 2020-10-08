@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
     validators: Dictionary<ValidationMethod>;
 
     constructor(private router: Router, private authenticationService: AuthenticationService) {
-        console.log(`LoginComponent`);
+        //console.log(`LoginComponent`);
     }
 
     ngOnInit() {

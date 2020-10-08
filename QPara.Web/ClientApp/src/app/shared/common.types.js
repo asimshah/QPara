@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MailchimpInformation = exports.MailchimpContact = exports.DocumentInfo = exports.EmailAddresses = exports.SubscriptionYears = exports.Statistics = exports.MembershipCounts = exports.SubscriptionPeriodCounts = exports.SubscriptionTypeCounts = exports.LeaverJoiners = exports.ColumnMetadata = exports.StandardLists = exports.ColumnNames = exports.MinutesDeliveryMethodFilter = exports.PaymentMethodFilter = exports.SubscriptionPeriodFilter = exports.SubscriptionTypeFilter = exports.DateFilter = exports.ZoneFilter = exports.NumberFilter = exports.BoolFilter = exports.EnumFilter = exports.Filter = exports.Parameters = exports.MemberEditResult = exports.Member = exports.Change = exports.Zone = exports.Note = exports.NoteLine = exports.Payment = exports.MatchType = exports.FilterType = exports.MemberType = exports.PaymentType = exports.SubscriptionType = exports.SubscriptionPeriod = exports.PaymentMethod = exports.MinutesDeliveryMethod = exports.LeavingReasons = void 0;
 var LeavingReasons;
 (function (LeavingReasons) {
     LeavingReasons[LeavingReasons["Other"] = 0] = "Other";
@@ -345,4 +346,16 @@ var DocumentInfo = /** @class */ (function () {
     return DocumentInfo;
 }());
 exports.DocumentInfo = DocumentInfo;
+var MailchimpContact = /** @class */ (function () {
+    function MailchimpContact() {
+    }
+    return MailchimpContact;
+}());
+exports.MailchimpContact = MailchimpContact;
+var MailchimpInformation = /** @class */ (function () {
+    function MailchimpInformation() {
+    }
+    return MailchimpInformation;
+}());
+exports.MailchimpInformation = MailchimpInformation;
 //# sourceMappingURL=common.types.js.map

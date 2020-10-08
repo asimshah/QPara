@@ -2,6 +2,7 @@ using Fastnet.Core;
 using Fastnet.Core.Web;
 using Fastnet.QPara;
 using Fastnet.QPara.Data;
+using MailChimp.Net;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,10 +34,10 @@ namespace QPara.Web
             var name = Process.GetCurrentProcess().ProcessName;
             var siteVersion = GetSiteVersion();
             var versions = System.Reflection.Assembly.GetExecutingAssembly().GetVersions();
-            log.Information($"Music {siteVersion} site started ({name}), using versions:");
+            log.Information($"QPara Membership {siteVersion} site started ({name}), using versions:");
             foreach (var item in versions.OrderByDescending(x => x.DateTime))
             {
-                log.Information($"{item.Name}, {item.DateTime.ToDefaultWithTime()}, [{item.Version}, {item.PackageVersion}]");
+                log.Information($"--> {item.Name}, {item.DateTime.ToDefaultWithTime()}, [{item.Version}, {item.PackageVersion}]");
             }
             //var version = typeof(Startup).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
             ////version = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion;
@@ -88,8 +89,10 @@ namespace QPara.Web
 
                     });
             services.AddOptions();
+            services.Configure<SchedulerOptions>(Configuration.GetSection("SchedulerOptions"));
+            services.AddSingleton<ScheduledTask, ReprocessPaymentRecords>();
+            services.AddScheduler(Configuration);
             services.Configure<QParaOptions>(Configuration.GetSection("QParaOptions"));
-
             services.Configure<QParaDbOptions>(Configuration.GetSection("QParaDbOptions"));
             var cs = environment.LocaliseConnectionString(Configuration.GetConnectionString("QParaDb"));
             services.AddDbContext<QParaDb>(options =>
@@ -113,6 +116,7 @@ namespace QPara.Web
                     throw;
                 }
             });
+            services.AddSingleton<MailChimpService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

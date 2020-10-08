@@ -20,6 +20,9 @@ namespace Fastnet.QPara
         public int LJAnalysisPeriod { get; set; } // no of years
         public DocumentInfo[] DocumentList { get; set; }
         public bool TimestampDownloadFilenames { get; set; }
+        public bool MailChimpEnabled { get; set; } = false;
+        public bool MailChimpUpdatesEnabled { get; set; } = false;
+        public bool UseQparaMailChimpKeyInTesting  { get; set; } = false;
         public QParaOptions()
         {
             DocumentList = new DocumentInfo[0];

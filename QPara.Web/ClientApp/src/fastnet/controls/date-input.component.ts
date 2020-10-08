@@ -135,7 +135,7 @@ export class DateInputControl extends InputControlBase implements OnInit, AfterV
     return "";
   }
   clear() {
-    console.log("date-input clear()");
+    //console.log("date-input clear()");
     this.value = null;
     this.onCloseCalendar();
   }

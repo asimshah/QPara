@@ -6,10 +6,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using mc_model = MailChimp.Net.Models;
 
 namespace Fastnet.QPara
 {
-
     public class LeaverJoiners
     {
         public string YearName { get; set; }
@@ -62,7 +62,6 @@ namespace Fastnet.QPara
             //LeaverJoiners = new LeaverJoiners();
         }
     }
-
     public class QueryResult
     {
         public string CreatedOn { get; set; }
@@ -214,6 +213,23 @@ namespace Fastnet.QPara
         public string[] AddressesForMembers { get; set; }
         public string[] AddressesForMinutes { get; set; }
         public string[] AddressesForPaymentsOutstanding { get; set; }
+    }
+    public class MailchimpContact
+    {
+        public string EmailAddress { get; set; }
+        public string UnsubscribeReason { get; set; }
+    }
+    public class MailchimpInformation
+    {
+        public bool UpdatesEnabled { get; set; }
+        public IEnumerable<MailchimpContact> Subscribed { get; set; }
+        public IEnumerable<MailchimpContact> Archived { get; set; }
+        public IEnumerable<MailchimpContact> Unsubscribed { get; set; }
+        public IEnumerable<MailchimpContact> Cleaned { get; set; }
+        public IEnumerable<string> MembersReceivingEmail { get; set; }
+        public IEnumerable<string> MembersDecliningEmail { get; set; }
+        public IEnumerable<string> MembersThatHaveLeft { get; set; }
+        public IEnumerable<string> SuspendedMembers { get; set; }
     }
     public static partial class dtoExtensions
     {
@@ -464,48 +480,13 @@ namespace Fastnet.QPara
                 StreetrepDescription = z.StreetRepDescription
             };
         }
-        //private static (bool paymentOutstanding, int amountDue, int amountReceived, DateTimeOffset dueOn) GetPaymentStatus(Member m, QParaOptions options)
-        //{
-        //    var dueOn = DateTimeOffset.MaxValue;
-        //    var amountDue = 0;
-        //    var amountReceived = 0;
-        //    var paymentIsOutstanding = false;
-        //    //var mpi = new MemberPaymentInfo
-        //    //{
-        //    //    MemberId = m.Id
-        //    //};
-        //    var yearStart = options.GetFirstDayOfYear(DateTimeOffset.Now);// new DateTimeOffset(DateTimeOffset.Now.Year, 10, 1, 0, 0, 0, TimeSpan.Zero);
-        //    if (m.SubscriptionPeriod == SubscriptionPeriod.Life || m.IsSuspended || m.Expired)
-        //    {
-        //        //mpi.PaymentIsOutstanding = false;
-        //        //mpi.AmountDue = 0;
-        //        //mpi.AmountReceived = 0;
-        //        //mpi.DueOn = DateTimeOffset.MaxValue;
-        //        //r = (false, 0, 0, DateTimeOffset.MaxValue);
-        //    }
-        //    else if (m.Payments != null)
-        //    {
-        //        var payments = m.Payments.Where(p => p.DueDate >= yearStart);
-        //        if (payments.Count() > 0)
-        //        {
-        //            //mpi.DueOn = payments.Max(p => p.DueDate);
-        //            //mpi.AmountDue = payments.Sum(p => p.AmountDue);
-        //            //mpi.AmountReceived = payments.Sum(p => p.AmountReceived);
-        //            //if (payments.All(x => x.IsPaid == true))
-        //            //{
-        //            //    mpi.PaymentIsOutstanding = false;
-        //            //}
-        //            //else
-        //            //{
-        //            //    mpi.PaymentIsOutstanding = mpi.AmountReceived < mpi.AmountDue;
-        //            //}
-        //            dueOn = payments.Max(p => p.DueDate);
-        //            amountDue = payments.Sum(p => p.AmountDue);
-        //            amountReceived = payments.Sum(p => p.AmountReceived);
-        //            paymentIsOutstanding = payments.All(x => x.IsPaid == true) ? false : amountReceived < amountDue;
-        //        }
-        //    }
-        //    return (paymentIsOutstanding, amountDue, amountReceived, dueOn);
-        //}
+        public static MailchimpContact ToDTO(this mc_model.Member member)
+        {
+            return new MailchimpContact
+            {
+                EmailAddress = member.EmailAddress,
+                UnsubscribeReason = member.UnsubscribeReason
+            };
+        }
     }
 }

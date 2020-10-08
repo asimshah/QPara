@@ -32,8 +32,13 @@
             <span class='glyphicon glyphicon-user'></span> Statistics
           </a>
         </li>
+        <li *ngIf="userType() === UserType.Administrator" [routerLinkActive]="['link-active']">
+          <a [routerLink]="['/mailchimp']">
+            <span class='glyphicon glyphicon-user'></span>Mailchimp
+          </a>
+        </li>
         <li>
-          <a  (click)="onLogout()">
+          <a (click)="onLogout()">
             <span class='glyphicon glyphicon-user'></span> Log out
           </a>
         </li>

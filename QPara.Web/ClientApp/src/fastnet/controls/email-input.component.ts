@@ -40,7 +40,7 @@ export class EmailInputControl extends InputControlBase {
         this.setPrevalidator((ctx, val) => this.validateEmail(ctx, val));
     }
     onChange() {
-        console.log("EmailInputControl ");
+        //console.log("EmailInputControl ");
         super.onInput();
         this.change.emit();
     }

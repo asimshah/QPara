@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
+using mc_model = MailChimp.Net.Models;
 
 namespace QPara.Web.Controllers
 {
@@ -25,15 +26,15 @@ namespace QPara.Web.Controllers
     [ApiController]
     public class MembershipController : BaseController
     {
-        //private readonly IWebHostEnvironment environment;
+        private readonly MailChimpService mailchimpService;
         private readonly QParaOptions options;
         private readonly QParaDb db;
-        public MembershipController(ILogger<MembershipController> logger, IOptions<QParaOptions> qpoptions,
+        public MembershipController(MailChimpService mailchimpService, ILogger<MembershipController> logger, IOptionsMonitor<QParaOptions> qpoptionsMonitor,
             QParaDb db, IWebHostEnvironment env) : base(logger, env)
         {
-
-            this.options = qpoptions.Value;
+            this.options = qpoptionsMonitor.CurrentValue;
             this.db = db;
+            this.mailchimpService = mailchimpService;
         }
         [HttpGet("get/documentlist")]
         public IActionResult GetDocumentList()
@@ -331,8 +332,11 @@ namespace QPara.Web.Controllers
                     member.Changes.Add(change);
                 }
                 member.UpdatePaymentRecords(options, true);
-
                 await db.SaveChangesAsync();
+                if(options.MailChimpEnabled)
+                {
+                    await this.mailchimpService.AddOrUpdateMemberAsync(member);
+                }
                 return SuccessResult(member.Id);
             }
             else
@@ -370,6 +374,10 @@ namespace QPara.Web.Controllers
             member.UpdatePaymentRecords(options, false);
             await db.Members.AddAsync(member);
             await db.SaveChangesAsync();
+            if (options.MailChimpEnabled)
+            {
+                await this.mailchimpService.AddOrUpdateMemberAsync(member);
+            }
             return SuccessResult(member.Id);
         }
         [HttpGet("delete/member/v2/{id}")]
@@ -409,6 +417,10 @@ namespace QPara.Web.Controllers
                     Description = $"Member {member.FirstName} {member.LastName} ({id}) deleted"
                 });
                 await db.SaveChangesAsync();
+                if (options.MailChimpEnabled)
+                {
+                    await this.mailchimpService.DeleteMemberAsync(member);
+                }
                 return SuccessResult(null);
             }
             return ErrorResult($"Member {id} not found");
@@ -521,6 +533,82 @@ namespace QPara.Web.Controllers
                 .OrderByDescending(x => x.Date);
             return SuccessResult(changes.Select(x => x.ToDTO()));
         }
+        [HttpGet("get/info/mailchimp")]
+        public async Task<IActionResult> GetMailChimpInformation()
+        {
+            IEnumerable<string> extractEmailAddresses(IEnumerable<Member> members)
+            {
+                return members.Where(m => m.Email != null && m.Email.Trim() != "")
+                .Select(x => x.Email)
+                .Union(members.Where(m => m.MemberCount > 1 && m.SecondEmail != null && m.SecondEmail.Trim() != "")
+                .Select(x => x.SecondEmail))
+                .OrderBy(m => m)
+                .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                ;
+            }
+            var info = new MailchimpInformation();
+            info.UpdatesEnabled = this.options.MailChimpUpdatesEnabled;
+            var t0 = await this.mailchimpService.GetSubscribedMembersAsync();
+            info.Subscribed = t0.Select(x => x.ToDTO());// await this.mailchimpService.GetSubscribedMembersAsync();
+            var t1 = await this.mailchimpService.GetArchivedMembersAsync();
+            info.Archived = t1.Select(x => x.ToDTO());
+            var t2 = await this.mailchimpService.GetCleanedMembersAsync();
+            info.Cleaned = t2.Select(x => x.ToDTO());
+            var t3 = await this.mailchimpService.GetUnsubscribedMembersAsync();
+            info.Unsubscribed = t3.Select(x => x.ToDTO());
+            IEnumerable<Member> membersWithEmailAddresses = GetMembersWithEmailAddresses();
+            var membersThatHaveleft = membersWithEmailAddresses.Where(x => x.HasLeft);
+            var remainder = membersWithEmailAddresses.Where(x => !x.HasLeft);
+            var suspendedMembers = remainder.Where(x => x.IsSuspended);
+            var membersReceivingEmail = remainder.Where(x => !x.IsSuspended && x.MinutesDeliveryMethod == MinutesDeliveryMethod.ByEmail);
+            var membersDecliningEmail = remainder.Where(x => !x.IsSuspended && x.MinutesDeliveryMethod != MinutesDeliveryMethod.ByEmail);
+            info.MembersReceivingEmail = extractEmailAddresses(membersReceivingEmail);
+            info.MembersDecliningEmail = extractEmailAddresses(membersDecliningEmail);
+            info.MembersThatHaveLeft = extractEmailAddresses(membersThatHaveleft);
+            info.SuspendedMembers = extractEmailAddresses(suspendedMembers);
+            return SuccessResult(info);
+        }
+
+        private IEnumerable<Member> GetMembersWithEmailAddresses()
+        {
+            var membersWithEmailAddresses = db.Members
+                .Where(m => (
+                    (m.Email != null && m.Email.Trim() != "")
+                    || (m.MemberCount > 1 && m.SecondEmail != null && m.SecondEmail.Trim() != "")
+                    ) /*&& m.MinutesDeliveryMethod == MinutesDeliveryMethod.ByEmail*/)
+                //.OrderBy(m => m.Email)
+                .AsEnumerable();
+            return membersWithEmailAddresses;
+        }
+
+        [HttpGet("sync/mailchimp")]
+        public async Task<IActionResult> SynchWithMailChimp()
+        {
+            if(options.MailChimpEnabled)
+            {
+                db.ChangeTracker.AutoDetectChangesEnabled = false;
+                var membersWithEmailAddresses = this.GetMembersWithEmailAddresses();
+
+                foreach(Member member in membersWithEmailAddresses)
+                {
+                    await this.mailchimpService.AddOrUpdateMemberAsync(member);
+                }
+                var mailChimpAddresses = await this.mailchimpService.GetAllMemberEmailAddressesAsync();
+                foreach(var address in mailChimpAddresses)
+                {
+                    var m = await db.Members.FirstOrDefaultAsync(x => x.Email.ToLower() == address.ToLower() ||x.MemberCount > 1 &&  x.SecondEmail.ToLower() == address.ToLower());
+                    if(m == null)
+                    {
+                        await this.mailchimpService.DeleteMemberAsync(address);
+                    }
+                }
+            }
+            else
+            {
+                log.Warning($"sync/mailchimp requested but mailchimp is not enabled");
+            }
+            return SuccessResult();
+        }
         //
         private IEnumerable<MemberDTO> GetMemberListAsDTO(IEnumerable<ColumnMetadata> filters)
         {
@@ -554,7 +642,7 @@ namespace QPara.Web.Controllers
             return m.IsAssociate;
         }
         private (int totalMembers, int totalAssociates) GetJoinersAndLeavers(string subscriptionYear, int totalMembers, int totalAssociates,
-    IEnumerable<Member> joiners, IEnumerable<Member> leavers, out LeaverJoiners lj)
+            IEnumerable<Member> joiners, IEnumerable<Member> leavers, out LeaverJoiners lj)
         {
             var joined = joiners.Sum(m => m.MemberCount);
             var left = leavers.Sum(m => m.MemberCount);

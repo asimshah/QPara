@@ -222,6 +222,11 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 8px;
+    > div > * {
+        &:not(:first-child) {
+            margin-top: $theme-gutter * 2;
+        }
+    }
   }
 
   .minutes-delivery-method {
@@ -229,7 +234,7 @@
   }
 
   .suspended {
-    margin-top: -40px;
+/*    margin-top: -40px;*/
   }
 
   .leaving-reason {

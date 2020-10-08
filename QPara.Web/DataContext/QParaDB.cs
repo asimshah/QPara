@@ -49,6 +49,7 @@ namespace Fastnet.QPara.Data
                 // V2DataConversion applies if there any pending migrations at all
                 db.RunV2DataConversion(pendingMigrations.Count(), dbOptions, options, log);
             }
+            log.Information($"QParaDb is: {db.Database.GetDbConnection().ConnectionString}");
             db.Validate(log);
         }
     }
@@ -65,6 +66,7 @@ namespace Fastnet.QPara.Data
     }
     public class QParaDb : DbContext
     {
+        private string connectionString;
         public DbSet<Member> Members { get; set; }
         public DbSet<Zone> Zones { get; set; }
         public DbSet<Payment> Payments { get; set; }
@@ -73,9 +75,28 @@ namespace Fastnet.QPara.Data
         public DbSet<PaymentNote> PaymentNotes { get; set; }
         public DbSet<MemberNote> MemberNotes { get; set; }
         public DbSet<Change> Changes { get; set; }
+        public QParaDb(string cs)
+        {
+            this.connectionString = cs;
+        }
         public QParaDb(DbContextOptions<QParaDb> contextOptions) : base(contextOptions)
         {
 
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(connectionString)
+                    .EnableDetailedErrors()
+                    .EnableSensitiveDataLogging()
+                    //.UseLoggerFactory(lf)
+                    .UseLazyLoadingProxies();
+            }
+            else
+            {
+                base.OnConfiguring(optionsBuilder);
+            }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,6 +1,7 @@
 ﻿using Fastnet.Core;
 using Fastnet.Core.Web;
 using Fastnet.Core.Web.Controllers;
+using MailChimp.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,8 +23,11 @@ namespace QPara.Web.Controllers
     [ApiController]
     public class TestController : BaseController
     {
-        public TestController(ILogger<TestController> logger, IWebHostEnvironment env) : base(logger, env)
+        //private readonly MailChimpManager mailChimpManager;
+        private readonly MailChimpService mailChimpService;
+        public TestController(MailChimpService mailChimpService,  ILogger<TestController> logger, IWebHostEnvironment env) : base(logger, env)
         {
+            this.mailChimpService = mailChimpService;
         }
         [HttpGet("echo/{msg}")]
         public IActionResult Echo(string msg)
@@ -80,6 +84,57 @@ namespace QPara.Web.Controllers
             Response.Headers.Add("Content-Disposition", cd.ToString());
             var stream = System.IO.File.OpenRead(file);
             return new FileStreamResult(stream, new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        }
+        [HttpGet("mailchimp/1/list")]
+        public async Task<IActionResult> DumpMailChimpMembers1()
+        {
+            //var mcm = mailChimpManager;
+            string apikey = @"11875bda055e8f4bcabdfc0b03712e78-us2";
+            var mcm = new MailChimpManager(apikey);
+            var lists = await mcm.Lists.GetAllAsync();
+            int count = 0;
+            foreach(var list in lists)
+            {
+                var members = await mcm.Members.GetAllAsync(list.Id);
+                foreach(var member in members)
+                {
+                    log.Information($"{(++count).ToString("00#")}. {list.Name}, {member.EmailAddress}, status {member.Status}");
+                }
+            }
+            return SuccessResult();
+        }
+        [HttpGet("mailchimp/2/list")]
+        public async Task<IActionResult> DumpMailChimpMembers2()
+        {
+            //int count = 0;
+            //var members = await this.mailChimpService.GetAllMembersAsync();
+            //foreach (var member in members)
+            //{
+            //    log.Information($"{++count:00#}. {member.ListId}, {member.EmailAddress}, status {member.Status}");
+            //}
+            return SuccessResult();
+        }
+        [HttpGet("mailchimp/3/list")]
+        public async Task<IActionResult> DumpMailChimpMembers3()
+        {
+            int count = 0;
+            var members = await this.mailChimpService.GetArchivedMembersAsync();
+            foreach (var member in members)
+            {
+                log.Information($"{++count:00#}. {member.ListId}, {member.EmailAddress}, status {member.Status}");
+            }
+            return SuccessResult();
+        }
+        [HttpGet("mailchimp/4/list")]
+        public async Task<IActionResult> DumpMailChimpMembers4()
+        {
+            int count = 0;
+            var members = await this.mailChimpService.GetCleanedMembersAsync();
+            foreach (var member in members)
+            {
+                log.Information($"{++count:00#}. {member.ListId}, {member.EmailAddress}, status {member.Status}");
+            }
+            return SuccessResult();
         }
     }
 }

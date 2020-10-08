@@ -1,4 +1,3 @@
-
 export function getCleanDate(date: string | null): Date {
     let d = date === null ? new Date() : new Date(date);
     let cd = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0));
@@ -32,3 +31,24 @@ export function getFormattedDate(d: Date | string): string {
         return "";
     }
 }
+
+//// now some extension methods
+//// I haven't found a way of declaring them in their own separate file
+
+
+
+//function exceptOld<T>(setB: Set<T>) {
+//    let setA = this as Set<T>;
+//    let _difference = new Set(setA);
+//    for (let elem of setB) {
+//        _difference.delete(elem)
+//    }
+//    return _difference;
+//}
+
+
+
+
+
+
+

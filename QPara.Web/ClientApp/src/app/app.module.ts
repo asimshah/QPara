@@ -23,11 +23,12 @@ import { FilterCriteriaComponent } from './filter-criteria/filter-criteria.compo
 import { ColumnSelectorComponent } from './column-selector/column-selector.component';
 import { MembersComponent } from './members/members.component';
 import { ChangeHistoryComponent } from './change-history/change-history.component';
+import { MailchimpComponent } from './mailchimp/mailchimp.component';
 
 export function initApp(authentication: AuthenticationService) {
     return () => {
         let user = authentication.user;
-        console.log(`initApp(): current user is ${JSON.stringify(user)}`);
+        //console.log(`initApp(): current user is ${JSON.stringify(user)}`);
         return;
     };
 }
@@ -48,7 +49,8 @@ export function initApp(authentication: AuthenticationService) {
         FilterCriteriaComponent,
         ColumnSelectorComponent,
         MembersComponent,
-        ChangeHistoryComponent
+        ChangeHistoryComponent,
+        MailchimpComponent
 
     ],
     imports: [
@@ -63,6 +65,7 @@ export function initApp(authentication: AuthenticationService) {
             { path: "dashboard", component: DashboardComponent, canActivate: [AuthGuard] },
             { path: "documents", component: DocumentsComponent, canActivate: [AuthGuard] },
             { path: 'stats', component: CountersComponent, canActivate: [AuthGuard] },
+            { path: 'mailchimp', component: MailchimpComponent, canActivate: [AuthGuard] },
             { path: 'history', component: ChangeHistoryComponent, canActivate: [AuthGuard] },
             { path: '**', redirectTo: 'home' }
         ])

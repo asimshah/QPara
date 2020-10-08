@@ -1,0 +1,76 @@
+@import "../../fastnet/themes/_themes.scss";
+.busy-wait {
+    background-color: theme-colour('background');//transparentize($current, 0.5);
+}
+.scrollable {
+    height: 100%;
+    overflow-y: auto;
+    padding: $theme-gutter-narrow;
+    border: 1px solid theme-colour('primary');
+    border-radius: $theme-gutter-narrow;
+}
+
+.annotated-text {
+    font-size: 12px;
+    font-style: italic;
+}
+.reason-text {
+    color: red;
+}
+.title {
+    font-size: 24px;
+    margin: $theme-gutter-fine;
+}
+.statistics {
+    width: 75%;
+    color: white;
+    background-color: theme-colour('primary', 'dark');
+    padding: $theme-gutter;
+
+    table {
+        width: 100%;
+        td {
+            vertical-align: top;
+            padding-left: $theme-gutter-narrow;
+            padding-right: $theme-gutter-narrow;
+        }
+
+        tr {
+            &.right-align {
+                td {
+                    text-align: right;
+                }
+            }
+
+            &.headings {
+                font-size: 12px;
+                font-style: italic;
+                background-color: darken(theme-colour('primary', 'dark'), 10%);
+            }
+        }
+    }
+}
+.two-column {
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+}
+.address-list {
+    padding: 10px;
+
+    .annotated-text {
+        font-weight: bold;
+        font-size: 13px;
+        color : theme-colour('primary');
+        margin-bottom: $theme-gutter;
+        max-width: 90%;
+    }
+    .email-address {
+        padding-right: $theme-gutter;
+        font-size: 12px;
+    }
+    .scrollable {
+        line-height: 1.3em;
+        height: 10.4em;
+        //float: left;
+    }
+}

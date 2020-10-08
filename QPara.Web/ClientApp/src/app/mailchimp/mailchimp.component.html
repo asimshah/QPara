@@ -1,0 +1,90 @@
+<div *ngIf="ready === false">Loading information from Mailchimp, please wait ...</div>
+<div *ngIf="ready === true">
+    <div class="title">Members with email addresses v Mailchimp address lists</div>
+    <div class="statistics">
+        <table border="0">
+            <tr class="right-align headings">
+                <td>Members receiving emails</td>
+                <td>Members declining emails</td>
+                <td>Suspended members</td>
+                <td>Members that have left</td>
+            </tr>
+            <tr class="right-align">
+                <td>{{info.membersReceivingEmail.length}}</td>
+                <td>{{info.membersDecliningEmail.length}}</td>
+                <td>{{info.suspendedMembers.length}}</td>
+                <td>{{info.membersThatHaveLeft.length}}</td>
+            </tr>
+            <tr class="right-align headings">
+                <td>Mailchimp subscribed addresses</td>
+                <td>Mailchimp unsubscribed addresses</td>
+                <td>Mailchimp cleaned addresses</td>
+                <td>Mailchimp archived addresses</td>
+            </tr>
+            <tr class="right-align">
+                <td>{{info.subscribed.length}}</td>
+                <td>{{info.unsubscribed.length}}</td>
+                <td>{{info.cleaned.length}}</td>
+                <td>{{info.archived.length}}</td>
+            </tr>
+
+        </table>
+
+    </div>
+    <div class="two-column">
+        <div class="not-active-members address-list" *ngIf="addressesInMailchimpNotInMembers.length > 0">
+            <div class="annotated-text">The following {{addressesInMailchimpNotInMembers.length}} mailchimp subscribed addresses are not current members:</div>
+            <div class="scrollable">
+                <div class="email-address" *ngFor="let item of addressesInMailchimpNotInMembers">{{item}}</div>
+            </div>
+        </div>
+        <div class="not-exported-members address-list" *ngIf="addressesInMembersNotInMailchimp.length > 0">
+            <div class="annotated-text">The following {{addressesInMembersNotInMailchimp.length}} members receiving emails were not found in the mailchimp subscribed list:</div>
+            <div class="scrollable">
+                <div class="email-address" *ngFor="let item of addressesInMembersNotInMailchimp">{{item}}</div>
+            </div>
+        </div>
+        <div class="unsubscribed-members address-list" *ngIf="info.unsubscribed.length > 0">
+            <div class="annotated-text">The following {{info.unsubscribed.length}} mailchimp addresses are unsubscribed:</div>
+            <div class="scrollable">
+                <div class="email-address" *ngFor="let item of info.unsubscribed"><span>{{item.emailAddress}}, </span><span class="reason-text"> Reason: {{item.unsubscribeReason}}</span></div>
+            </div>
+        </div>
+        <div class="archived-addresses address-list" *ngIf="info.archived.length > 0">
+            <div class="annotated-text">The following {{info.archived.length}} mailchimp addresses are archived:</div>
+            <div class="scrollable">
+                <div class="email-address" *ngFor="let item of info.archived">{{item.emailAddress}}</div>
+            </div>
+        </div>
+        <div class="cleaned-addresses address-list" *ngIf="info.cleaned.length > 0">
+            <div class="annotated-text">The following {{info.cleaned.length}} mailchimp addresses are cleaned:</div>
+            <div class="scrollable">
+                <div class="email-address" *ngFor="let item of info.cleaned">{{item.emailAddress}}</div>
+            </div>
+        </div>
+        <div class="members-that-have-declined address-list" *ngIf="info.membersDecliningEmail.length > 0">
+            <div class="annotated-text">The following {{info.membersDecliningEmail.length}} members do not receive minutes by email:</div>
+            <div class="scrollable">
+                <div class="email-address" *ngFor="let item of info.membersDecliningEmail">{{item}}</div>
+            </div>
+        </div>
+        <div class="members-that-have-left address-list" *ngIf="info.membersThatHaveLeft.length > 0">
+            <div class="annotated-text">The following {{info.membersThatHaveLeft.length}} members have left:</div>
+            <div class="scrollable">
+                <div class="email-address" *ngFor="let item of info.membersThatHaveLeft">{{item}}</div>
+            </div>
+        </div>
+
+    </div>
+    <ul>
+        <li class="annotated-text">'Mailchimp unsubscribed addresses' are of members who have chosen to unsubscribe from mailings</li>
+        <li class="annotated-text">'Mailchimp archived addresses' are of members who have left or are currently suspended</li>
+        <li class="annotated-text">'Mailchimp cleaned addresses' are of members whose email addresses have failed (e.g. bounced)</li>
+    </ul>
+    <div *ngIf="info.updatesEnabled">
+        <button (click)="Synchronise()">Update Mailchimp Lists</button>
+    </div>
+
+</div>
+<busy-indicator></busy-indicator>
+<popup-message></popup-message>

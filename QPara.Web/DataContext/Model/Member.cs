@@ -69,7 +69,21 @@ namespace Fastnet.QPara.Data
         [Timestamp]
         public byte[] TimeStamp { get; set; }
         [NotMapped]
-        public string Name { get { return $"{FirstName} {LastName}"; } }
+        public string Name
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName))
+                {
+                    return $"{FirstName.Trim()} {LastName.Trim()}";
+                }
+                else if (!string.IsNullOrWhiteSpace(FirstName))
+                {
+                    return FirstName.Trim();
+                }
+                return LastName.Trim();
+            }
+        }
 
         [NotMapped]
         public string FullAddress
