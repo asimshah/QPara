@@ -231,6 +231,11 @@ namespace Fastnet.QPara
         public IEnumerable<string> MembersThatHaveLeft { get; set; }
         public IEnumerable<string> SuspendedMembers { get; set; }
     }
+    public class MemberResult
+    {
+        public long MemberId { get; set; }
+        public List<string> Messages { get; set; } = new List<string>();
+    }
     public static partial class dtoExtensions
     {
         private static DateTimeOffset backDate = new DateTimeOffset(2017, 10, 1, 0, 0, 0, 0, TimeSpan.Zero);
@@ -418,8 +423,8 @@ namespace Fastnet.QPara
                 FirstName = m.FirstName,
                 LastName = m.LastName,
                 Email = m.Email ?? string.Empty,
-                SecondEmail = m.SecondEmail ?? string.Empty,
-                HasEmail = !string.IsNullOrWhiteSpace(m.Email)  || !string.IsNullOrWhiteSpace(m.SecondEmail),
+                SecondEmail =  m.MemberCount > 1 ? (m.SecondEmail ?? string.Empty): string.Empty,
+                HasEmail = !string.IsNullOrWhiteSpace(m.Email)  || m.MemberCount > 1 && !string.IsNullOrWhiteSpace(m.SecondEmail),
                 PhoneNumber = m.PhoneNumber ?? string.Empty,
                 MobileNumber = m.MobileNumber ?? string.Empty,
                 Flat = m.Flat ?? string.Empty,

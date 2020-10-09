@@ -104,57 +104,92 @@ namespace QPara.Web
             var memberList = await mailChimpManager.Members.GetAllAsync(listId);
             return memberList.Select(m => m.EmailAddress).OrderBy(x => x);
         }
-        public async Task DeleteMemberAsync(string emailAddress)
+        public async Task<MailChimpServiceResult> DeleteMemberAsync(string emailAddress)
         {
+            var result = new MailChimpServiceResult();
             var exists = await mailChimpManager.Members.ExistsAsync(listId, emailAddress);
             if (exists)
             {
                 try
                 {
                     await mailChimpManager.Members.DeleteAsync(listId, emailAddress);
+                    var contact = await mailChimpManager.Members.GetAsync(listId, emailAddress);
+                    if (contact.Status != mc_model.Status.Archived)
+                    {
+                        log.Warning($"{emailAddress} not archived, status is {contact.Status}");
+                        result.Response = MailChimpServiceResponse.NotArchived;
+                        result.Contact = contact;
+                    }
                     log.Information($"mailchimp address {emailAddress} archived");
                 }
                 catch (System.Exception xe)
                 {
                     log.Error(xe, $"deleting {emailAddress} failed");
+                    result.Response = MailChimpServiceResponse.Error;
+                    result.Exception = xe;
                 }
             }
+            return result;
         }
         //public async Task 
-        public async Task DeleteMemberAsync(Member member, mc_model.Member contact = null)
+        public async Task<IEnumerable< MailChimpServiceResult>> DeleteMemberAsync(Member member, mc_model.Member contact = null)
         {
+            var results = new List<MailChimpServiceResult>();
             if (this.optionsMonitor.CurrentValue.MailChimpUpdatesEnabled)
             {
                 var emailAddresses = GetMemberEmailAddresses(member);
                 foreach(var emailAddress in emailAddresses)
                 {
+                    var result = new MailChimpServiceResult();
                     if (contact == null)
                     {
                         contact = await mailChimpManager.Members.GetAsync(listId, emailAddress);
                     }
                     if (contact.Status != mc_model.Status.Archived)
                     {
-                        await DeleteMemberAsync(emailAddress);
-                        log.Information($"[{member.Id}] member archived");
+                        if (this.optionsMonitor.CurrentValue.MailChimpAllowUnsubscribedToBeDeleted)
+                        {
+                            if(contact.Status == mc_model.Status.Unsubscribed)
+                            {
+                                contact.Status = mc_model.Status.Subscribed;
+                                contact = await mailChimpManager.Members.AddOrUpdateAsync(listId, contact);
+                                log.Warning($"[{member.Id}] unsubscribed member {emailAddress} status changed to {contact.Status}");
+                            }
+                        }
+                        result = await DeleteMemberAsync(emailAddress);
+                        contact = await mailChimpManager.Members.GetAsync(listId, emailAddress);
+                        if (contact.Status != mc_model.Status.Archived)
+                        {
+                            log.Warning($"[{member.Id}] member {emailAddress} not archived, status is {contact.Status}");
+                        }
+                        else
+                        {
+                            log.Information($"[{member.Id}] member {emailAddress} archived");
+                        }
                     }
+                    results.Add(result);
                 }
+
             }
             else
             {
                 log.Warning($"mailchimp updates are disabled");
             }
+            return results;
         }
-        public async Task AddOrUpdateMemberAsync(Member member/*, string emailAddress, qpModel.Zone zone*/)
+        public async Task<IEnumerable<MailChimpServiceResult>> AddOrUpdateMemberAsync(Member member/*, string emailAddress, qpModel.Zone zone*/)
         {
             bool shouldArchive(Member m)
             {
                 return m.IsSuspended || m.HasLeft || m.MinutesDeliveryMethod != MinutesDeliveryMethod.ByEmail;
             }
+            var results = new List<MailChimpServiceResult>();
             if (this.optionsMonitor.CurrentValue.MailChimpUpdatesEnabled)
             {
                 var emailAddresses = GetMemberEmailAddresses(member);
                 foreach (var emailAddress in emailAddresses)
                 {
+                    var result = new MailChimpServiceResult();
                     mc_model.Member contact = null;
                     var exists = await mailChimpManager.Members.ExistsAsync(listId, emailAddress, null, false);
                     if (exists)
@@ -195,7 +230,8 @@ namespace QPara.Web
                     }
                     if (shouldArchive(member))
                     {
-                        await DeleteMemberAsync(member, contact);
+                        var t = await DeleteMemberAsync(member, contact);
+                        results.AddRange(t);
                     }
                     else
                     {
@@ -224,6 +260,9 @@ namespace QPara.Web
                         else
                         {
                             log.Warning($"Member [{member.Id}] {emailAddress} is unsubscribed - check if member has left, or does not want email delivery of minutes");
+                            result.Response = MailChimpServiceResponse.IsUnsubscribed;
+                            result.Contact = contact;
+                            results.Add(result);
                         }
                     }
                 }
@@ -232,7 +271,7 @@ namespace QPara.Web
             {
                 log.Warning($"mailchimp updates are disabled");
             }
-            return;
+            return results;
         }
 
         private static List<string> GetMemberEmailAddresses(Member member)

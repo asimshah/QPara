@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { BaseService } from './base.service';
 import { HttpClient } from '@angular/common/http';
-import { Parameters, Zone, PaymentType, ColumnMetadata, Member, EmailAddresses, Note, DocumentInfo, Change, Statistics, SubscriptionYears, MailchimpInformation } from '../shared/common.types';
+import { Parameters, Zone, PaymentType, ColumnMetadata, Member, EmailAddresses, Note, DocumentInfo, Change, Statistics, SubscriptionYears, MailchimpInformation, MemberResult } from '../shared/common.types';
 import { EnumValue } from '../../fastnet/core/core.types';
 import { BehaviorSubject } from 'rxjs';
 
@@ -145,15 +145,15 @@ export class MembersService extends BaseService implements OnInit {
     }
     async createNewMemberV2(member: Member) {
         let post = `post/new/member/v2`;
-        return this.postAndGetAsync<Member, number>(post, member);
+        return this.postAndGetAsync<Member, MemberResult>(post, member);
     }
     async updateMemberV2(member: Member) {
         let post = `post/update/member/v2`;
-        return this.postAndGetAsync<Member, number>(post, member);
+        return this.postAndGetAsync<Member, MemberResult>(post, member);
     }
     async deleteMemberV2(memberId: number) {
         let query = `delete/member/v2/${memberId}`;
-        return this.getAsync(query);
+        return this.getAsync<MemberResult>(query);
     }
     async getStats() {
         let query = `get/stats/V2`;

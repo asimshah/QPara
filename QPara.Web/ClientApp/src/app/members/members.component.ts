@@ -137,6 +137,7 @@ export class MembersComponent implements OnInit {
             let r = m.firstName !== null && re.test(m.firstName)
                 || m.lastName !== null && re.test(m.lastName)
                 || m.email !== null && re.test(m.email)
+                || m.memberCount > 1 && m.secondEmail != null && re.test(m.secondEmail)
                 || m.address !== null && re.test(m.address)
                 || m.mobileNumber !== null && re.test(m.mobileNumber)
                 || m.phoneNumber !== null && re.test(m.phoneNumber)
@@ -359,7 +360,9 @@ export class MembersComponent implements OnInit {
         let s = this.currentPage * this.pageSize;
         let end = s + this.pageSize;
         for (var i = s; i < Math.min(end, this.searchMatchedMemberList.length); ++i) {
-            this.currentPageMemberList.push(this.searchMatchedMemberList[i]);
+            setTimeout((j) => {
+                this.currentPageMemberList.push(this.searchMatchedMemberList[j]);
+            }, 0, i);
         }
         this.currentPageStart = s + 1;
         this.currentPageEnd = this.currentPageMemberList.length + s;
@@ -371,6 +374,7 @@ export class MembersComponent implements OnInit {
         defaultCriteria.push(Object.assign(new ColumnMetadata(), { show: true, name: ColumnNames.LastName }));
         defaultCriteria.push(Object.assign(new ColumnMetadata(), { show: false, name: ColumnNames.Name }));
         defaultCriteria.push(Object.assign(new ColumnMetadata(), { show: true, name: ColumnNames.Email }));
+        defaultCriteria.push(Object.assign(new ColumnMetadata(), { show: false, name: ColumnNames.SecondEmail }));
         defaultCriteria.push(Object.assign(new ColumnMetadata(), { show: true, name: ColumnNames.Address }));
         defaultCriteria.push(Object.assign(new ColumnMetadata(), { show: false, name: ColumnNames.PostCode }));
 

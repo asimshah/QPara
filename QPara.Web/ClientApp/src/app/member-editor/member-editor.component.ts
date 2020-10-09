@@ -178,11 +178,19 @@ export class MemberEditorComponent implements OnInit, AfterViewInit, OnDestroy {
             this.member.zoneNumber = this.member.zoneItem.value;
             this.member.isAssociate = this.member.zoneNumber === 19;
             console.log(`creating new member using ${JSON.stringify(this.member)}`);
-            this.member.id = await this.memberService.createNewMemberV2(this.member);
+            //this.member.id = await this.memberService.createNewMemberV2(this.member);
+            //this.memberId = this.member.id;
+            let mr = await this.memberService.createNewMemberV2(this.member);
+            this.member.id = mr.memberId;
             this.memberId = this.member.id;
             this.saveMemberInformation();
             MemberEditorComponent.newMemberCreatedSource.next(this.member.id);
-            this.messageBox.open("A new member has been created", () => { })
+            let messages: string[] = [];
+            messages.push("A new member has been created");
+            for (let m of mr.messages) {
+                messages.push(m);
+            }
+            this.messageBox.open(messages, () => { });
         } else {
             console.log("some controls are not valid")
         }
@@ -194,13 +202,18 @@ export class MemberEditorComponent implements OnInit, AfterViewInit, OnDestroy {
             //console.log("all valid");
             this.member.zoneNumber = this.member.zoneItem.value;
             this.member.isAssociate = this.member.zoneNumber === 19;
-            await this.memberService.updateMemberV2(this.member);
+            let mr = await this.memberService.updateMemberV2(this.member);
             await this.getMember();
             this.saveMemberInformation();
             this.editResult.memberChanged = true;
-            this.messageBox.open("Member details have been saved.", () => { })
+            let messages: string[] = [];
+            messages.push("Member details have been saved.");
+            for (let m of mr.messages) {
+                messages.push(m);
+            }
+            this.messageBox.open(messages, () => { });
         } else {
-            console.log("some controls are not valid")
+            console.log("some controls are not valid");
         }
     }
     onDeleteMember() {
@@ -209,10 +222,16 @@ export class MemberEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         messages.push('<div>Please confirm that it is OK to delete this member.</div>');
         this.messageBox.open(messages, async (r) => {
             if (r === DialogResult.ok) {
-                await this.memberService.deleteMemberV2(this.memberId);
-                //let result = new MemberEditResult();
+                let mr = await this.memberService.deleteMemberV2(this.memberId);
+                if (mr.messages.length > 0) {
+                    let messages: string[] = [];
+                    for (let m of mr.messages) {
+                        messages.push(m);
+                    }
+                    this.messageBox.open(messages, () => { });
+                }
+
                 this.editResult.memberDeleted = true;
-                //result.member = this.member;
                 this.popup.close(this.editResult);
             }
         }, { allowCancel: true });

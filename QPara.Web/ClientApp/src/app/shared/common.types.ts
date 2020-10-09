@@ -269,7 +269,8 @@ export enum ColumnNames {
     AmountDue,
     AmountReceived,
     PaymentIsOutstanding,
-    IsPaid
+    IsPaid,
+    SecondEmail
 }
 export enum StandardLists {
     ZoneMembers,
@@ -357,5 +358,8 @@ export class MailchimpInformation {
     membersDecliningEmail: string[];
     membersThatHaveLeft: string[];
     suspendedMembers: string[];
-
+}
+export class MemberResult {
+    memberId: number;
+    messages: string[];
 }

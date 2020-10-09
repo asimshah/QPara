@@ -27,74 +27,79 @@
     <div class="member-list">
       <table>
         <thead>
-          <tr class="header">
-            <!--<th></th>-->
-            <th *ngIf="canShowColumn(ColumnNames.FirstName)" class="name">First Name</th>
-            <th *ngIf="canShowColumn(ColumnNames.LastName)" class="name">Last Name</th>
-            <th *ngIf="canShowColumn(ColumnNames.Name)" class="name">Name</th>
-            <th *ngIf="canShowColumn(ColumnNames.Email)" class="email">Email</th>
-            <th *ngIf="canShowColumn(ColumnNames.Address)" class="address">Address</th>
-            <th *ngIf="canShowColumn(ColumnNames.PostCode)" class="postcode">Post Code</th>
+            <tr class="header">
+                <!--<th></th>-->
+                <th *ngIf="canShowColumn(ColumnNames.FirstName)" class="name">First Name</th>
+                <th *ngIf="canShowColumn(ColumnNames.LastName)" class="name">Last Name</th>
+                <th *ngIf="canShowColumn(ColumnNames.Name)" class="name">Name</th>
+                <th *ngIf="canShowColumn(ColumnNames.Email)" class="email">Email</th>
+                <th *ngIf="canShowColumn(ColumnNames.SecondEmail)" class="email">Second Email</th>
+                <th *ngIf="canShowColumn(ColumnNames.Address)" class="address">Address</th>
+                <th *ngIf="canShowColumn(ColumnNames.PostCode)" class="postcode">Post Code</th>
 
-            <th *ngIf="canShowColumn(ColumnNames.PhoneNumber)" class="phoneNumber">Phone</th>
-            <th *ngIf="canShowColumn(ColumnNames.MobileNumber)" class="mobileNumber">Mobile</th>
-            <th *ngIf="canShowColumn(ColumnNames.MemberCount)" class="memberCount">Count</th>
-            <th *ngIf="canShowColumn(ColumnNames.ZoneNumber)" class="zoneNumber">Zone</th>
-            <th *ngIf="canShowColumn(ColumnNames.SubscriptionPeriod)" class="subscriptionPeriod">Period</th>
-            <th *ngIf="canShowColumn(ColumnNames.SubscriptionType)" class="subscriptionType">Subscription Type</th>
+                <th *ngIf="canShowColumn(ColumnNames.PhoneNumber)" class="phoneNumber">Phone</th>
+                <th *ngIf="canShowColumn(ColumnNames.MobileNumber)" class="mobileNumber">Mobile</th>
+                <th *ngIf="canShowColumn(ColumnNames.MemberCount)" class="memberCount">Count</th>
+                <th *ngIf="canShowColumn(ColumnNames.ZoneNumber)" class="zoneNumber">Zone</th>
+                <th *ngIf="canShowColumn(ColumnNames.SubscriptionPeriod)" class="subscriptionPeriod">Period</th>
+                <th *ngIf="canShowColumn(ColumnNames.SubscriptionType)" class="subscriptionType">Subscription Type</th>
 
-            <th *ngIf="canShowColumn(ColumnNames.JoinedOn)" class="joinedOn">Joined</th>
-            <th *ngIf="canShowColumn(ColumnNames.PaymentMethod)" class="paymentMethod" title="Payment method - R for regular (eg SO)">PM</th>
-            <th *ngIf="canShowColumn(ColumnNames.MinutesDeliveryMethod)" class="minutesDeliveryMethod">Minutes</th>
-            <th *ngIf="canShowColumn(ColumnNames.DeliveryNote)" class="deliveryNote">Del. Note</th>
-            <th *ngIf="canShowColumn(ColumnNames.IsSuspended)" class="isSuspended">Susp.</th>
+                <th *ngIf="canShowColumn(ColumnNames.JoinedOn)" class="joinedOn">Joined</th>
+                <th *ngIf="canShowColumn(ColumnNames.PaymentMethod)" class="paymentMethod" title="Payment method - R for regular (eg SO)">PM</th>
+                <th *ngIf="canShowColumn(ColumnNames.MinutesDeliveryMethod)" class="minutesDeliveryMethod">Minutes</th>
+                <th *ngIf="canShowColumn(ColumnNames.DeliveryNote)" class="deliveryNote">Del. Note</th>
+                <th *ngIf="canShowColumn(ColumnNames.IsSuspended)" class="isSuspended">Susp.</th>
 
-            <th *ngIf="canShowColumn(ColumnNames.HasLeft)" class="hasLeft">Has Left</th>
-            <th *ngIf="canShowColumn(ColumnNames.LeftOn)" class="leftOn">Left</th>
-            <th *ngIf="canShowColumn(ColumnNames.LeavingReason)" class="leavingReason">Reason</th>
-            <th *ngIf="canShowColumn(ColumnNames.PaymentIsOutstanding)" class="paymentIsOutstanding">Is Due</th>
-            <th *ngIf="canShowColumn(ColumnNames.MonthDue)" class="monthDue">Due In</th>
+                <th *ngIf="canShowColumn(ColumnNames.HasLeft)" class="hasLeft">Has Left</th>
+                <th *ngIf="canShowColumn(ColumnNames.LeftOn)" class="leftOn">Left</th>
+                <th *ngIf="canShowColumn(ColumnNames.LeavingReason)" class="leavingReason">Reason</th>
+                <th *ngIf="canShowColumn(ColumnNames.PaymentIsOutstanding)" class="paymentIsOutstanding">Is Due</th>
+                <th *ngIf="canShowColumn(ColumnNames.MonthDue)" class="monthDue">Due In</th>
 
-            <th *ngIf="canShowColumn(ColumnNames.AmountDue)" class="amountDue">Due</th>
-            <th *ngIf="canShowColumn(ColumnNames.AmountReceived)" class="amountReceived">Recd.</th>
-            <th *ngIf="canShowColumn(ColumnNames.IsPaid)" class="isPaid">Waived</th>
-          </tr>
+                <th *ngIf="canShowColumn(ColumnNames.AmountDue)" class="amountDue">Due</th>
+                <th *ngIf="canShowColumn(ColumnNames.AmountReceived)" class="amountReceived">Recd.</th>
+                <th *ngIf="canShowColumn(ColumnNames.IsPaid)" class="isPaid">Waived</th>
+            </tr>
         </thead>
         <tbody>
-          <tr [ngClass]="{ 'suspended': m.isSuspended, 'payment-outstanding': m.paymentIsOutstanding && !m.hasLeft && !m.isPaid}" *ngFor="let m of currentPageMemberList">
-            <td *ngIf="canShowColumn(ColumnNames.FirstName)" class="name" (click)="onMemberRowClick(m)">{{m.firstName}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.LastName)" class="name" (click)="onMemberRowClick(m)">{{m.lastName}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.Name)" class="name" (click)="onMemberRowClick(m)">{{m.name}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.Email)" class="email">
-              <a *ngIf="showEmailAsMailToLink; else noMailTo" href="mailto:{{m.email}}">{{m.email}}</a>
-              <ng-template #noMailTo><div (click)="onMemberRowClick(m)">{{m.email}}</div></ng-template>
-            </td>
-            <td *ngIf="canShowColumn(ColumnNames.Address)" class="address" (click)="onMemberRowClick(m)"><div>{{m.flat}}</div><div>{{m.address}}</div></td>
-            <td *ngIf="canShowColumn(ColumnNames.PostCode)" class="address" (click)="onMemberRowClick(m)">{{m.postCode}}</td>
+            <tr [ngClass]="{'has-left': m.hasLeft, 'suspended': m.isSuspended, 'payment-outstanding': m.paymentIsOutstanding && !m.hasLeft && !m.isPaid}" *ngFor="let m of currentPageMemberList">
+                <td *ngIf="canShowColumn(ColumnNames.FirstName)" class="name" (click)="onMemberRowClick(m)">{{m.firstName}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.LastName)" class="name" (click)="onMemberRowClick(m)">{{m.lastName}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.Name)" class="name" (click)="onMemberRowClick(m)">{{m.name}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.Email)" class="email">
+                    <a *ngIf="showEmailAsMailToLink; else noMailTo" href="mailto:{{m.email}}">{{m.email}}</a>
+                    <ng-template #noMailTo><div (click)="onMemberRowClick(m)">{{m.email}}</div></ng-template>
+                </td>
+                <td *ngIf="canShowColumn(ColumnNames.SecondEmail)" class="email">
+                    <a *ngIf="showEmailAsMailToLink; else noMailTo" href="mailto:{{m.secondEmail}}">{{m.secondEmail}}</a>
+                    <ng-template #noMailTo><div (click)="onMemberRowClick(m)">{{m.secondEmail}}</div></ng-template>
+                </td>
+                <td *ngIf="canShowColumn(ColumnNames.Address)" class="address" (click)="onMemberRowClick(m)"><div>{{m.flat}}</div><div>{{m.address}}</div></td>
+                <td *ngIf="canShowColumn(ColumnNames.PostCode)" class="address" (click)="onMemberRowClick(m)">{{m.postCode}}</td>
 
-            <td *ngIf="canShowColumn(ColumnNames.PhoneNumber)" class="phoneNumber" (click)="onMemberRowClick(m)">{{m.phoneNumber}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.MobileNumber)" class="mobileNumber" (click)="onMemberRowClick(m)">{{m.mobileNumber}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.MemberCount)" class="memberCount" (click)="onMemberRowClick(m)">{{m.memberCount}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.ZoneNumber)" class="zoneNumber" (click)="onMemberRowClick(m)">{{m.zoneNumber}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.SubscriptionPeriod)" class="subscriptionPeriod" (click)="onMemberRowClick(m)">{{SubscriptionPeriod[m.subscriptionPeriod]}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.SubscriptionType)" class="subscriptionType" (click)="onMemberRowClick(m)">{{SubscriptionType[m.subscriptionType]}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.PhoneNumber)" class="phoneNumber" (click)="onMemberRowClick(m)">{{m.phoneNumber}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.MobileNumber)" class="mobileNumber" (click)="onMemberRowClick(m)">{{m.mobileNumber}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.MemberCount)" class="memberCount" (click)="onMemberRowClick(m)">{{m.memberCount}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.ZoneNumber)" class="zoneNumber" (click)="onMemberRowClick(m)">{{m.zoneNumber}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.SubscriptionPeriod)" class="subscriptionPeriod" (click)="onMemberRowClick(m)">{{SubscriptionPeriod[m.subscriptionPeriod]}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.SubscriptionType)" class="subscriptionType" (click)="onMemberRowClick(m)">{{SubscriptionType[m.subscriptionType]}}</td>
 
-            <td *ngIf="canShowColumn(ColumnNames.JoinedOn)" class="joinedOn" (click)="onMemberRowClick(m)">{{getJoinedOnDate(m)}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.PaymentMethod)" class="paymentMethod" (click)="onMemberRowClick(m)">{{getFormattedPaymentMethod(m.paymentMethod)}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.MinutesDeliveryMethod)" class="minutesDeliveryMethod" (click)="onMemberRowClick(m)">{{MinutesDeliveryMethod[m.minutesDeliveryMethod]}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.DeliveryNote)" class="deliveryNote" (click)="onMemberRowClick(m)">{{m.deliveryNote}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.IsSuspended)" class="isSuspended" (click)="onMemberRowClick(m)">{{m.isSuspended ? "Y" : ""}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.JoinedOn)" class="joinedOn" (click)="onMemberRowClick(m)">{{getJoinedOnDate(m)}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.PaymentMethod)" class="paymentMethod" (click)="onMemberRowClick(m)">{{getFormattedPaymentMethod(m.paymentMethod)}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.MinutesDeliveryMethod)" class="minutesDeliveryMethod" (click)="onMemberRowClick(m)">{{MinutesDeliveryMethod[m.minutesDeliveryMethod]}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.DeliveryNote)" class="deliveryNote" (click)="onMemberRowClick(m)">{{m.deliveryNote}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.IsSuspended)" class="isSuspended" (click)="onMemberRowClick(m)">{{m.isSuspended ? "Y" : ""}}</td>
 
-            <td *ngIf="canShowColumn(ColumnNames.HasLeft)" class="hasLeft" (click)="onMemberRowClick(m)">{{m.hasLeft ? "Y" : ""}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.LeftOn)" class="leftOn" (click)="onMemberRowClick(m)">{{formatDate(m.leftOn)}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.LeavingReason)" class="leavingReason" (click)="onMemberRowClick(m)">{{m.hasLeft ? LeavingReasons[m.leavingReason] : ""}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.PaymentIsOutstanding)" class="paymentIsOutstanding" (click)="onMemberRowClick(m)">{{m.paymentIsOutstanding ? "Y" : ""}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.MonthDue)" class="monthDue" (click)="onMemberRowClick(m)">{{getMonthDue(m.monthDue)}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.HasLeft)" class="hasLeft" (click)="onMemberRowClick(m)">{{m.hasLeft ? "Y" : ""}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.LeftOn)" class="leftOn" (click)="onMemberRowClick(m)">{{formatDate(m.leftOn)}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.LeavingReason)" class="leavingReason" (click)="onMemberRowClick(m)">{{m.hasLeft ? LeavingReasons[m.leavingReason] : ""}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.PaymentIsOutstanding)" class="paymentIsOutstanding" (click)="onMemberRowClick(m)">{{m.paymentIsOutstanding ? "Y" : ""}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.MonthDue)" class="monthDue" (click)="onMemberRowClick(m)">{{getMonthDue(m.monthDue)}}</td>
 
-            <td *ngIf="canShowColumn(ColumnNames.AmountDue)" class="amountDue" (click)="onMemberRowClick(m)">{{getAmountDue(m)}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.AmountReceived)" class="amountReceived" (click)="onMemberRowClick(m)">{{getAmountReceived(m)}}</td>
-            <td *ngIf="canShowColumn(ColumnNames.IsPaid)" class="isPaid" (click)="onMemberRowClick(m)">{{m.isPaid ? "Y" : ""}}</td>
-          </tr>
+                <td *ngIf="canShowColumn(ColumnNames.AmountDue)" class="amountDue" (click)="onMemberRowClick(m)">{{getAmountDue(m)}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.AmountReceived)" class="amountReceived" (click)="onMemberRowClick(m)">{{getAmountReceived(m)}}</td>
+                <td *ngIf="canShowColumn(ColumnNames.IsPaid)" class="isPaid" (click)="onMemberRowClick(m)">{{m.isPaid ? "Y" : ""}}</td>
+            </tr>
         </tbody>
       </table>
     </div>

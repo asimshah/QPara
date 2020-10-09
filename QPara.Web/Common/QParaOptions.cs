@@ -22,6 +22,7 @@ namespace Fastnet.QPara
         public bool TimestampDownloadFilenames { get; set; }
         public bool MailChimpEnabled { get; set; } = false;
         public bool MailChimpUpdatesEnabled { get; set; } = false;
+        public bool MailChimpAllowUnsubscribedToBeDeleted { get; set; } = true;
         public bool UseQparaMailChimpKeyInTesting  { get; set; } = false;
         public QParaOptions()
         {

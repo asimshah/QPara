@@ -245,7 +245,7 @@ namespace QPara.Web.Controllers
                 var count = result.Count();
                 if (count == 0)
                 {
-                    result = await db.Members.Where(x => x.SecondEmail.ToLower() == email.ToLower())
+                    result = await db.Members.Where(x => x.MemberCount > 1 && x.SecondEmail.ToLower() == email.ToLower())
                         .ToArrayAsync();
                     count = count = result.Count();
                 }
@@ -333,11 +333,13 @@ namespace QPara.Web.Controllers
                 }
                 member.UpdatePaymentRecords(options, true);
                 await db.SaveChangesAsync();
-                if(options.MailChimpEnabled)
+                var mr = new MemberResult { MemberId = member.Id };
+                if (options.MailChimpEnabled)
                 {
-                    await this.mailchimpService.AddOrUpdateMemberAsync(member);
+                    var results = await this.mailchimpService.AddOrUpdateMemberAsync(member);
+                    ProcessMailChimpResults(mr, results);
                 }
-                return SuccessResult(member.Id);
+                return SuccessResult(mr);
             }
             else
             {
@@ -374,12 +376,37 @@ namespace QPara.Web.Controllers
             member.UpdatePaymentRecords(options, false);
             await db.Members.AddAsync(member);
             await db.SaveChangesAsync();
+            var mr = new MemberResult { MemberId = member.Id };
             if (options.MailChimpEnabled)
             {
-                await this.mailchimpService.AddOrUpdateMemberAsync(member);
+                var results = await this.mailchimpService.AddOrUpdateMemberAsync(member);
+
+                ProcessMailChimpResults(mr, results);
             }
-            return SuccessResult(member.Id);
+            return SuccessResult(mr);
         }
+
+        private void ProcessMailChimpResults(MemberResult mr, IEnumerable<MailChimpServiceResult> results)
+        {
+            foreach (var r in results)
+            {
+                switch (r.Response)
+                {
+                    case MailChimpServiceResponse.Normal:
+                        break;
+                    case MailChimpServiceResponse.Error:
+                        mr.Messages.Add($"Mailchimp update failed: {r.Exception.Message}");
+                        break;
+                    case MailChimpServiceResponse.IsUnsubscribed:
+                        mr.Messages.Add($"{r.Contact.EmailAddress} is unsubscribed at Mailchimp - check if member has left, or does not want email delivery of minutes (or resubscribe!)");
+                        break;
+                    case MailChimpServiceResponse.NotArchived:
+                        mr.Messages.Add($"{r.Contact.EmailAddress} not archived, current status is {r.Contact.Status}");
+                        break;
+                }
+            }
+        }
+
         [HttpGet("delete/member/v2/{id}")]
         public async Task<IActionResult> DeleteMemberV2(int id)
         {
@@ -417,11 +444,13 @@ namespace QPara.Web.Controllers
                     Description = $"Member {member.FirstName} {member.LastName} ({id}) deleted"
                 });
                 await db.SaveChangesAsync();
+                var mr = new MemberResult { MemberId = member.Id };
                 if (options.MailChimpEnabled)
                 {
-                    await this.mailchimpService.DeleteMemberAsync(member);
+                    var results = await this.mailchimpService.DeleteMemberAsync(member);
+                    ProcessMailChimpResults(mr, results);
                 }
-                return SuccessResult(null);
+                return SuccessResult(mr);
             }
             return ErrorResult($"Member {id} not found");
         }
