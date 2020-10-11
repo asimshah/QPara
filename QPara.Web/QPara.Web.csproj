@@ -18,8 +18,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="5.1.2" />
-    <PackageReference Include="Fastnet.Core" Version="2.245.1048" />
-    <PackageReference Include="Fastnet.Core.Web" Version="2.246.638" />
+    <PackageReference Include="Fastnet.Core" Version="2.283.866" />
+    <PackageReference Include="Fastnet.Core.Web" Version="2.283.866" />
     <PackageReference Include="MailChimp.Net.V3" Version="4.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.5" />
@@ -42,6 +42,14 @@
   <ItemGroup>
     <None Remove="ClientApp\src\app\shared\common.functions.ts" />
     <None Remove="ClientApp\src\app\shared\common.types.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Fastnet.Core.Private">
+      <HintPath>..\..\deployment\Dotfuscated\netcoreapp3.1\Fastnet.Core.Private.dll</HintPath>
+    </Reference>
+    <Reference Include="Fastnet.QPara.Private">
+      <HintPath>..\..\deployment\Dotfuscated\netcoreapp3.1\Fastnet.QPara.Private.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\shared\common.functions.ts" />

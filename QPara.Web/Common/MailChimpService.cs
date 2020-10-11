@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace QPara.Web
 {
     public class MailChimpService
     {
+
         private string listId = string.Empty;
         private string mailChimpApiKey = string.Empty;
         private IMailChimpManager mailChimpManager;
@@ -26,20 +28,11 @@ namespace QPara.Web
         private readonly IOptionsMonitor<QParaOptions> optionsMonitor;
         private readonly string connectionString;
         public MailChimpService(IOptionsMonitor<QParaOptions> optionsMonitor, ILogger<MailChimpService> logger,
-            IConfiguration cfg, IWebHostEnvironment env)
+            IServiceProvider sp, IConfiguration cfg, IWebHostEnvironment env)
         {
             void Initialise()
             {
-                if (env.IsDevelopment() && optionsMonitor.CurrentValue.UseQparaMailChimpKeyInTesting == false)
-                {
-                    // this is my mailchimp api key 
-                    mailChimpApiKey = @"11875bda055e8f4bcabdfc0b03712e78-us2";
-                }
-                else
-                {
-                    mailChimpApiKey = @"f81745b38c1d4c6ef1b8427bf387741c-us20";
-                }
-                this.mailChimpManager = new MailChimpManager(mailChimpApiKey);
+                this.mailChimpManager = Mailchimp.GetManager(sp); //new MailChimpManager(mailChimpApiKey);
                 IEnumerable<mc_model.List> lists = mailChimpManager.Lists.GetAllAsync().Result;
                 if (lists.Count() > 1)
                 {
