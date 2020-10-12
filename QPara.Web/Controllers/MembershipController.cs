@@ -585,12 +585,14 @@ namespace QPara.Web.Controllers
             info.Cleaned = t2.Select(x => x.ToDTO());
             var t3 = await this.mailchimpService.GetUnsubscribedMembersAsync();
             info.Unsubscribed = t3.Select(x => x.ToDTO());
+
             IEnumerable<Member> membersWithEmailAddresses = GetMembersWithEmailAddresses();
             var membersThatHaveleft = membersWithEmailAddresses.Where(x => x.HasLeft);
             var remainder = membersWithEmailAddresses.Where(x => !x.HasLeft);
-            var suspendedMembers = remainder.Where(x => x.IsSuspended);
-            var membersReceivingEmail = remainder.Where(x => !x.IsSuspended && x.MinutesDeliveryMethod == MinutesDeliveryMethod.ByEmail);
-            var membersDecliningEmail = remainder.Where(x => !x.IsSuspended && x.MinutesDeliveryMethod != MinutesDeliveryMethod.ByEmail);
+            var suspendedMembers = membersWithEmailAddresses.Where(x => x.HasLeft == false && x.IsSuspended == true); ;// remainder.Where(x => x.IsSuspended);
+            var membersReceivingEmail = membersWithEmailAddresses.Where(x => x.HasLeft == false && x.IsSuspended == false && x.MinutesDeliveryMethod == MinutesDeliveryMethod.ByEmail);
+            var membersDecliningEmail = membersWithEmailAddresses.Where(x => x.HasLeft == false && x.IsSuspended == false && x.MinutesDeliveryMethod != MinutesDeliveryMethod.ByEmail);// remainder.Where(x => !x.IsSuspended && x.MinutesDeliveryMethod != MinutesDeliveryMethod.ByEmail);
+
             info.MembersReceivingEmail = extractEmailAddresses(membersReceivingEmail);
             info.MembersDecliningEmail = extractEmailAddresses(membersDecliningEmail);
             info.MembersThatHaveLeft = extractEmailAddresses(membersThatHaveleft);
@@ -601,11 +603,10 @@ namespace QPara.Web.Controllers
         private IEnumerable<Member> GetMembersWithEmailAddresses()
         {
             var membersWithEmailAddresses = db.Members
-                .Where(m => (
-                    (m.Email != null && m.Email.Trim() != "")
-                    || (m.MemberCount > 1 && m.SecondEmail != null && m.SecondEmail.Trim() != "")
-                    ) /*&& m.MinutesDeliveryMethod == MinutesDeliveryMethod.ByEmail*/)
-                //.OrderBy(m => m.Email)
+                .Where(m => 
+                    (m.Email != null && m.Email.Trim() != "")  || (m.MemberCount > 1 && m.SecondEmail != null && m.SecondEmail.Trim() != "")
+                   )
+                .OrderBy(m => m.Email)
                 .AsEnumerable();
             return membersWithEmailAddresses;
         }
@@ -613,22 +614,68 @@ namespace QPara.Web.Controllers
         [HttpGet("sync/mailchimp")]
         public async Task<IActionResult> SynchWithMailChimp()
         {
-            if(options.MailChimpEnabled)
+            void logResult(MailChimpServiceResult mr)
+            {
+                switch (mr.Response)
+                {
+                    case MailChimpServiceResponse.Error:
+                        log.Debug($" mr --> {mr.Response}, {mr.Exception.Message}");
+                        break;
+                    default:
+                        log.Trace($" mr --> {mr.Response}");
+                        break;
+                }
+            }
+            IEnumerable<string> GetEmailAddresses(Member m)
+            {
+                switch (m.MemberCount)
+                {
+                    case 1:
+                        if (!string.IsNullOrWhiteSpace(m.Email))
+                        {
+                            return new string[] { m.Email };
+                        }
+                        goto default;
+
+                    case 2:
+                        var list = new List<string>();
+                        if (!string.IsNullOrWhiteSpace(m.Email))
+                        {
+                            list.Add(m.Email);
+                        }
+                        if (!string.IsNullOrWhiteSpace(m.SecondEmail))
+                        {
+                            list.Add(m.SecondEmail);
+                        }
+                        return list;
+                    default:
+                        return new string[0];
+                }
+            }
+            if (options.MailChimpEnabled)
             {
                 db.ChangeTracker.AutoDetectChangesEnabled = false;
                 var membersWithEmailAddresses = this.GetMembersWithEmailAddresses();
-
+                log.Information($"**************************** Sync phase 1 ************************");
                 foreach(Member member in membersWithEmailAddresses)
                 {
-                    await this.mailchimpService.AddOrUpdateMemberAsync(member);
+                    log.Debug($"calling AddOrUpdateMemberAsync() with member {member.Id}, ==> {(string.Join(", ", GetEmailAddresses(member)))})");
+                    var mrlist = await this.mailchimpService.AddOrUpdateMemberAsync(member);
+                    foreach(var mr in mrlist)
+                    {
+                        logResult(mr);
+                    }
                 }
                 var mailChimpAddresses = await this.mailchimpService.GetAllMemberEmailAddressesAsync();
-                foreach(var address in mailChimpAddresses)
+                log.Information($"**************************** Sync phase 2 ************************");
+                foreach (var address in mailChimpAddresses)
                 {
                     var m = await db.Members.FirstOrDefaultAsync(x => x.Email.ToLower() == address.ToLower() ||x.MemberCount > 1 &&  x.SecondEmail.ToLower() == address.ToLower());
                     if(m == null)
                     {
-                        await this.mailchimpService.DeleteMemberAsync(address);
+                        log.Debug($"calling DeleteMemberAsync() with address {address} as no corresponding member found in db");
+                        var mr = await this.mailchimpService.DeleteMemberAsync(address);
+                        logResult(mr);
                     }
                 }
             }

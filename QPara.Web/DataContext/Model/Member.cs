@@ -159,5 +159,6 @@ namespace Fastnet.QPara.Data
             return this.Payments.Where(x => x.SubscriptionYear == options.GetCurrentSubscriptionYear())
                 .Any(x => x.IsPaid);
         }
+
     }
 }

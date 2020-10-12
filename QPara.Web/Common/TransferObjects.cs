@@ -223,6 +223,7 @@ namespace Fastnet.QPara
     {
         public bool UpdatesEnabled { get; set; }
         public IEnumerable<MailchimpContact> Subscribed { get; set; }
+        public IEnumerable<MailchimpContact> SubscribedNotMembers { get; set; }
         public IEnumerable<MailchimpContact> Archived { get; set; }
         public IEnumerable<MailchimpContact> Unsubscribed { get; set; }
         public IEnumerable<MailchimpContact> Cleaned { get; set; }

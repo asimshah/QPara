@@ -20,7 +20,6 @@ namespace QPara.Web
 {
     public class MailChimpService
     {
-
         private string listId = string.Empty;
         private string mailChimpApiKey = string.Empty;
         private IMailChimpManager mailChimpManager;
@@ -87,17 +86,17 @@ namespace QPara.Web
             //});
             //return memberList.OrderBy(x => x.EmailAddress);
         }
-        //public async Task<IEnumerable<mc_model.Member>> GetAllMembersAsync()
-        //{
-        //    var memberList = await mailChimpManager.Members.GetAllAsync(listId);
-        //    return memberList;
-        //}
+        public async Task<IEnumerable<mc_model.Member>> GetAllMembersAsync()
+        {
+            var memberList = await mailChimpManager.Members.GetAllAsync(listId);
+            return memberList;
+        }
         public async Task<IEnumerable<string>> GetAllMemberEmailAddressesAsync()
         {
             var memberList = await mailChimpManager.Members.GetAllAsync(listId);
             return memberList.Select(m => m.EmailAddress).OrderBy(x => x);
         }
-        public async Task<MailChimpServiceResult> DeleteMemberAsync(string emailAddress)
+        public async Task<MailChimpServiceResult> DeleteMemberAsync(string emailAddress, mc_model.Member contact = null)
         {
             var result = new MailChimpServiceResult();
             var exists = await mailChimpManager.Members.ExistsAsync(listId, emailAddress);
@@ -105,15 +104,25 @@ namespace QPara.Web
             {
                 try
                 {
-                    await mailChimpManager.Members.DeleteAsync(listId, emailAddress);
-                    var contact = await mailChimpManager.Members.GetAsync(listId, emailAddress);
+                    if (contact == null)
+                    {
+                        contact = await mailChimpManager.Members.GetAsync(listId, emailAddress);
+                    }
+                    if (contact.Status == mc_model.Status.Subscribed || contact.Status == mc_model.Status.Unsubscribed)
+                    {
+                        await mailChimpManager.Members.DeleteAsync(listId, emailAddress);
+                        contact = await mailChimpManager.Members.GetAsync(listId, emailAddress);
+                    }
                     if (contact.Status != mc_model.Status.Archived)
                     {
                         log.Warning($"{emailAddress} not archived, status is {contact.Status}");
                         result.Response = MailChimpServiceResponse.NotArchived;
                         result.Contact = contact;
                     }
-                    log.Information($"mailchimp address {emailAddress} archived");
+                    else
+                    {
+                        log.Information($"mailchimp address {emailAddress} archived");
+                    }
                 }
                 catch (System.Exception xe)
                 {
@@ -125,16 +134,16 @@ namespace QPara.Web
             return result;
         }
         //public async Task 
-        public async Task<IEnumerable< MailChimpServiceResult>> DeleteMemberAsync(Member member, mc_model.Member contact = null)
+        public async Task<IEnumerable<MailChimpServiceResult>> DeleteMemberAsync(Member member, mc_model.Member contact = null)
         {
             var results = new List<MailChimpServiceResult>();
             if (this.optionsMonitor.CurrentValue.MailChimpUpdatesEnabled)
             {
                 var emailAddresses = GetMemberEmailAddresses(member);
-                foreach(var emailAddress in emailAddresses)
+                foreach (var emailAddress in emailAddresses)
                 {
                     var result = new MailChimpServiceResult();
-                    if (contact == null)
+                    if (contact == null || contact.EmailAddress.ToLower() != emailAddress.ToLower())
                     {
                         contact = await mailChimpManager.Members.GetAsync(listId, emailAddress);
                     }
@@ -142,7 +151,7 @@ namespace QPara.Web
                     {
                         if (this.optionsMonitor.CurrentValue.MailChimpAllowUnsubscribedToBeDeleted)
                         {
-                            if(contact.Status == mc_model.Status.Unsubscribed)
+                            if (contact.Status == mc_model.Status.Unsubscribed)
                             {
                                 contact.Status = mc_model.Status.Subscribed;
                                 contact = await mailChimpManager.Members.AddOrUpdateAsync(listId, contact);
@@ -179,82 +188,106 @@ namespace QPara.Web
             var results = new List<MailChimpServiceResult>();
             if (this.optionsMonitor.CurrentValue.MailChimpUpdatesEnabled)
             {
-                var emailAddresses = GetMemberEmailAddresses(member);
-                foreach (var emailAddress in emailAddresses)
+                if (shouldArchive(member))
                 {
-                    var result = new MailChimpServiceResult();
-                    mc_model.Member contact = null;
-                    var exists = await mailChimpManager.Members.ExistsAsync(listId, emailAddress, null, false);
-                    if (exists)
+                    try
                     {
-                        contact = await mailChimpManager.Members.GetAsync(listId, emailAddress);
-                        string fname = contact.MergeFields.ContainsKey("FNAME") ? (string)contact.MergeFields["FNAME"] : string.Empty;
-                        string lname = contact.MergeFields.ContainsKey("LNAME") ? (string)contact.MergeFields["LNAME"] : string.Empty;
-                        if (!(
-                            (fname.Trim() == (member.FirstName?.Trim() ?? string.Empty) && lname == (member.LastName?.Trim() ?? string.Empty))
-                            || (fname == string.Empty && lname == string.Empty)))
-                        {
-                            using (var db = new QParaDb(connectionString))
-                            {
-                                var matchingMembers = db.Members.Where(m => m.Email.ToLower() == emailAddress || m.MemberCount > 1 && m.SecondEmail.ToLower() == emailAddress);
-                                if(matchingMembers.Count() > 1)
-                                {
-
-                                    log.Warning($"duplicate use of {emailAddress}: mailchimp name is {fname} {lname}:");
-                                    foreach(var m in matchingMembers)
-                                    {
-                                        log.Warning($"--> [{m.Id}] {m.Name} uses the same email address");
-                                    }
-                                    continue;
-                                }
-                            }
-                            //    log.Warning($"duplicate use of {emailAddress}: existing member is {fname} {lname}, {member.Name} [{member.Id}]  uses the same email address");
-                            //continue;
-                        }
-                    }
-                    else
-                    {
-                        contact = new mc_model.Member
-                        {
-                            EmailAddress = emailAddress,
-                            StatusIfNew = mc_model.Status.Subscribed,
-                        };
-                        contact = await mailChimpManager.Members.AddOrUpdateAsync(listId, contact);
-                    }
-                    if (shouldArchive(member))
-                    {
-                        var t = await DeleteMemberAsync(member, contact);
+                        var t = await DeleteMemberAsync(member);
                         results.AddRange(t);
                     }
-                    else
+                    catch (Exception xe)
                     {
-                        if (contact.Status != mc_model.Status.Unsubscribed)
+                        log.Error(xe, $"deleting {member.Id} {member.Email} failed");
+                        var result = new MailChimpServiceResult();
+                        result.Response = MailChimpServiceResponse.Error;
+                        result.Exception = xe;
+                        results.Add(result);
+                    }
+                }
+                else
+                {
+                    var emailAddresses = GetMemberEmailAddresses(member);
+                    foreach (var emailAddress in emailAddresses)
+                    {
+                        try
                         {
-                            string fname = contact.MergeFields.ContainsKey("FNAME") ? (string)contact.MergeFields["FNAME"] : string.Empty;
-                            string lname = contact.MergeFields.ContainsKey("LNAME") ? (string)contact.MergeFields["LNAME"] : string.Empty;
-                            if(contact.Status != mc_model.Status.Subscribed || fname != (member.FirstName?.Trim() ?? string.Empty)
-                                || lname != (member.LastName?.Trim() ?? string.Empty)) {
-                                var previousStatus = contact.Status;
-                                contact.Status = mc_model.Status.Subscribed;
-                                contact.MergeFields.Clear();
-                                contact.MergeFields.Add("FNAME", member.FirstName?.Trim() ?? string.Empty);
-                                contact.MergeFields.Add("LNAME", member.LastName?.Trim() ?? string.Empty);
-                                contact = await mailChimpManager.Members.AddOrUpdateAsync(listId, contact);
-                                if (contact.Status == previousStatus)
+                            var result = new MailChimpServiceResult();
+                            mc_model.Member contact = null;
+                            var exists = await mailChimpManager.Members.ExistsAsync(listId, emailAddress, null, false);
+                            if (exists)
+                            {
+                                contact = await mailChimpManager.Members.GetAsync(listId, emailAddress);
+                                string fname = contact.MergeFields.ContainsKey("FNAME") ? (string)contact.MergeFields["FNAME"] : string.Empty;
+                                string lname = contact.MergeFields.ContainsKey("LNAME") ? (string)contact.MergeFields["LNAME"] : string.Empty;
+                                if (!(
+                                    (fname.Trim() == (member.FirstName?.Trim() ?? string.Empty) && lname == (member.LastName?.Trim() ?? string.Empty))
+                                    || (fname == string.Empty && lname == string.Empty)))
                                 {
-                                    log.Information($"member [{member.Id}] {contact.EmailAddress} added/updated, status {contact.Status}");
-                                }
-                                else
-                                {
-                                    log.Information($"member [{member.Id}] {contact.EmailAddress} added/updated, status changed from {previousStatus} to {contact.Status}");
+                                    using (var db = new QParaDb(connectionString))
+                                    {
+                                        var matchingMembers = db.Members.Where(m => m.Email.ToLower() == emailAddress || m.MemberCount > 1 && m.SecondEmail.ToLower() == emailAddress);
+                                        if (matchingMembers.Count() > 1)
+                                        {
+
+                                            log.Warning($"duplicate use of {emailAddress}: mailchimp name is {fname} {lname}:");
+                                            foreach (var m in matchingMembers)
+                                            {
+                                                log.Warning($"--> [{m.Id}] {m.Name} uses the same email address");
+                                            }
+                                            continue;
+                                        }
+                                    }
+                                    //    log.Warning($"duplicate use of {emailAddress}: existing member is {fname} {lname}, {member.Name} [{member.Id}]  uses the same email address");
+                                    //continue;
                                 }
                             }
+                            else
+                            {
+                                contact = new mc_model.Member
+                                {
+                                    EmailAddress = emailAddress,
+                                    StatusIfNew = mc_model.Status.Subscribed,
+                                };
+                                contact = await mailChimpManager.Members.AddOrUpdateAsync(listId, contact);
+                            }
+
+                            if (contact.Status != mc_model.Status.Unsubscribed)
+                            {
+                                string fname = contact.MergeFields.ContainsKey("FNAME") ? (string)contact.MergeFields["FNAME"] : string.Empty;
+                                string lname = contact.MergeFields.ContainsKey("LNAME") ? (string)contact.MergeFields["LNAME"] : string.Empty;
+                                if (contact.Status != mc_model.Status.Subscribed || fname != (member.FirstName?.Trim() ?? string.Empty)
+                                    || lname != (member.LastName?.Trim() ?? string.Empty))
+                                {
+                                    var previousStatus = contact.Status;
+                                    contact.Status = mc_model.Status.Subscribed;
+                                    contact.MergeFields.Clear();
+                                    contact.MergeFields.Add("FNAME", member.FirstName?.Trim() ?? string.Empty);
+                                    contact.MergeFields.Add("LNAME", member.LastName?.Trim() ?? string.Empty);
+                                    contact = await mailChimpManager.Members.AddOrUpdateAsync(listId, contact);
+                                    if (contact.Status == previousStatus)
+                                    {
+                                        log.Information($"member [{member.Id}] {contact.EmailAddress} added/updated, status {contact.Status}");
+                                    }
+                                    else
+                                    {
+                                        log.Information($"member [{member.Id}] {contact.EmailAddress} added/updated, status changed from {previousStatus} to {contact.Status}");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                log.Warning($"Member [{member.Id}] {emailAddress} is unsubscribed - check if member has left, or does not want email delivery of minutes");
+                                result.Response = MailChimpServiceResponse.IsUnsubscribed;
+                                result.Contact = contact;
+                                results.Add(result);
+                            }
                         }
-                        else
+                        catch (Exception xe)
                         {
-                            log.Warning($"Member [{member.Id}] {emailAddress} is unsubscribed - check if member has left, or does not want email delivery of minutes");
-                            result.Response = MailChimpServiceResponse.IsUnsubscribed;
-                            result.Contact = contact;
+                            log.Error(xe, $"add/update {member.Id} {emailAddress} failed");
+                            var result = new MailChimpServiceResult();
+                            result.Response = MailChimpServiceResponse.Error;
+                            result.Exception = xe;
                             results.Add(result);
                         }
                     }
@@ -274,7 +307,7 @@ namespace QPara.Web
             {
                 emailAddresses.Add(member.Email);
             }
-            if ( member.MemberCount > 1 && !string.IsNullOrWhiteSpace(member.SecondEmail))
+            if (member.MemberCount > 1 && !string.IsNullOrWhiteSpace(member.SecondEmail))
             {
                 emailAddresses.Add(member.SecondEmail);
             }
