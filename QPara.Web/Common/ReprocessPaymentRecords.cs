@@ -2,7 +2,6 @@
 using Fastnet.Core.Web;
 using Fastnet.QPara.Data;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
